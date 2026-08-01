@@ -1,0 +1,20 @@
+{
+  "name": "reporting-react-components",
+  "version": "1.0.0",
+  "description": "React components for Reporting API",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "devexpress-reporting-react": "^24.2.0",
+    "devexpress-reporting": "^24.2.0",
+    "devextreme": "^24.2.0",
+    "@devexpress/analytics-core": "^24.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}

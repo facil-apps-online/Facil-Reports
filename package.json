@@ -1,0 +1,20 @@
+{
+  "name": "facilreports",
+  "version": "1.0.0",
+  "description": "Centralized Reporting API for document generation",
+  "scripts": {
+    "dev": "dotnet run --project FacilReports",
+    "build": "dotnet build FacilReports",
+    "publish": "dotnet publish FacilReports -c Release -o ./publish",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/facil-apps-online/Facil-Reports.git"
+  },
+  "author": "",
+  "license": "MIT"
+}
