@@ -5,7 +5,7 @@
 set -e
 
 echo "=========================================="
-echo "  Reporting API - Deploy"
+echo "  Facil Reports - Deploy"
 echo "=========================================="
 
 DEPLOY_DIR="/opt/FacilReports"
@@ -17,16 +17,16 @@ if [ ! -f "docker-compose.yml" ]; then
     exit 1
 fi
 
-echo "[1/4] Pulling latest changes..."
-git pull origin main
+# Note: code is transferred via SCP from local machine (scripts/deploy.ps1)
+# This script rebuilds and restarts the container from the transferred files.
 
-echo "[2/4] Building new Docker image..."
+echo "[1/4] Building new Docker image..."
 docker compose build --no-cache
 
-echo "[3/4] Stopping current container..."
+echo "[2/4] Stopping current container..."
 docker compose down
 
-echo "[4/4] Starting new container..."
+echo "[3/4] Starting new container..."
 docker compose up -d
 
 echo ""

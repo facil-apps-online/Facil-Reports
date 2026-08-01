@@ -1,28 +1,23 @@
 #!/bin/bash
-# Reporting API - Initial Server Deployment
-# Run this after setup-server.sh
+# Facil Reports - Initial Server Deployment
+# Run this after setup-server.sh and after transferring code via SCP (scripts/deploy.ps1)
 
 set -e
 
 echo "=========================================="
-echo "  Reporting API - Initial Deploy"
+echo "  Facil Reports - Initial Deploy"
 echo "=========================================="
 
 DEPLOY_DIR="/opt/FacilReports"
-REPO_URL="https://github.com/facil-apps-online/Facil-Reports.git"
 
-# Clone repository
-echo "[1/6] Cloning repository..."
-if [ -d "$DEPLOY_DIR/.git" ]; then
-    echo "Repository already cloned. Pulling latest..."
-    cd $DEPLOY_DIR
-    git pull origin main
-else
-    sudo rm -rf $DEPLOY_DIR
-    sudo git clone $REPO_URL $DEPLOY_DIR
-    sudo chown -R $USER:$USER $DEPLOY_DIR
-    cd $DEPLOY_DIR
+# Check that code was transferred
+echo "[1/6] Verifying project files..."
+if [ ! -f "$DEPLOY_DIR/docker-compose.yml" ]; then
+    echo "Error: docker-compose.yml not found in $DEPLOY_DIR"
+    echo "Transfer the code first with: .\\scripts\\deploy.ps1 -SkipBuild"
+    exit 1
 fi
+cd $DEPLOY_DIR
 
 # Configure environment
 echo "[2/6] Configuring environment..."

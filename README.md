@@ -55,31 +55,41 @@ curl http://localhost:5000/health
 
 ## Deploy en Producción
 
+Flujo híbrido: **GIT** para el repositorio del proyecto (GitHub), **SCP** para transferir código al servidor.
+
 ### 1. Preparar servidor DigitalOcean
 
 ```bash
 # SSH al droplet
 ssh root@YOUR_DROPLET_IP
 
-# Clonar repositorio
-git clone https://github.com/facil-apps-online/Facil-Reports.git /opt/FacilReports
-cd /opt/FacilReports
-
 # Ejecutar setup
 chmod +x scripts/setup-server.sh
 ./scripts/setup-server.sh
 ```
 
-### 2. Configurar API keys
+### 2. Transferir el código (desde Windows)
+
+```powershell
+# Copia el código por SCP y levanta el contenedor
+.\scripts\deploy.ps1
+```
+
+### 3. Configurar API keys (primera vez)
 
 ```bash
+cd /opt/FacilReports
 cp .env.example .env
 nano .env  # Agregar API keys reales
 ```
 
-### 3. Desplegar
+### 4. Desplegar
 
 ```bash
+# Desde Windows (SCP + rebuild)
+.\scripts\deploy.ps1
+
+# O solo en el servidor (rebuild desde código ya transferido)
 chmod +x scripts/deploy.sh
 ./scripts/deploy.sh
 ```
