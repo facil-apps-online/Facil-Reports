@@ -39,7 +39,7 @@ public class TemplatesController : ControllerBase
                 success = true,
                 templateKey = request.TemplateKey,
                 fileId,
-                message = "Template saved to Google Drive"
+                message = "Template saved to local vault and Google Drive"
             });
         }
         catch (Exception ex)
@@ -49,17 +49,17 @@ public class TemplatesController : ControllerBase
     }
 
     /// <summary>
-    /// Get a .repx template from Google Drive
+    /// Get a .repx template (local vault first, then Google Drive by fileId)
     /// </summary>
     [HttpGet("{templateKey}")]
-    public async Task<IActionResult> GetTemplate(string templateKey)
+    public async Task<IActionResult> GetTemplate(string templateKey, [FromQuery] string? fileId = null)
     {
         var tenant = HttpContext.Items["Tenant"] as TenantConfig;
         if (tenant == null) return Unauthorized();
 
         try
         {
-            var repxBytes = await _driveService.DownloadTemplate(tenant, templateKey);
+            var repxBytes = await _driveService.GetTemplateAsync(tenant, templateKey, fileId);
             if (repxBytes == null)
                 return NotFound(new { error = $"Template '{templateKey}' not found" });
 
@@ -101,17 +101,17 @@ public class TemplatesController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a template from Google Drive
+    /// Delete a template from the local vault and Google Drive
     /// </summary>
     [HttpDelete("{templateKey}")]
-    public async Task<IActionResult> DeleteTemplate(string templateKey)
+    public async Task<IActionResult> DeleteTemplate(string templateKey, [FromQuery] string? fileId = null)
     {
         var tenant = HttpContext.Items["Tenant"] as TenantConfig;
         if (tenant == null) return Unauthorized();
 
         try
         {
-            await _driveService.DeleteTemplate(tenant, templateKey);
+            await _driveService.DeleteTemplate(tenant, templateKey, fileId);
             return Ok(new { success = true, message = $"Template '{templateKey}' deleted" });
         }
         catch (Exception ex)

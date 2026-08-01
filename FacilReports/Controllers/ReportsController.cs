@@ -30,7 +30,8 @@ public class ReportsController : ControllerBase
             var pdfBytes = await _generator.GenerateFromJson(
                 tenant,
                 request.TemplateKey,
-                request.Data
+                request.Data,
+                request.FileId
             );
 
             // Return as base64 if requested

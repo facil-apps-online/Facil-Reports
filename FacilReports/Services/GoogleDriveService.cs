@@ -5,213 +5,311 @@ using FacilReports.Models;
 namespace FacilReports.Services;
 
 /// <summary>
-/// Service to interact with Google Drive via the platform's Supabase Edge Function
-/// (google-drive-upload lives in each platform's own Supabase project).
+/// Template storage with a local vault cache per platform plus Google Drive
+/// as source of truth.
+///
+/// Vault layout: {Storage:VaultRoot}/{platform_slug}/templates/{template_key}.repx
+///
+/// Drive access goes through Core edge functions (google-drive-upload /
+/// google-drive-download / google-drive-delete) which resolve the platform's
+/// system_owner Google Drive credentials from tenant_integrations, so Facil
+/// Reports never handles Google credentials itself.
 /// </summary>
 public class GoogleDriveService
 {
     private readonly HttpClient _httpClient;
+    private readonly IConfiguration _config;
     private readonly ILogger<GoogleDriveService> _logger;
+    private readonly string _vaultRoot;
 
     public GoogleDriveService(
         HttpClient httpClient,
+        IConfiguration config,
         ILogger<GoogleDriveService> logger)
     {
         _httpClient = httpClient;
+        _config = config;
         _logger = logger;
+        _vaultRoot = config["Storage:VaultRoot"] ?? "Reports/vault";
+    }
+
+    private string GetVaultPath(TenantConfig platform, string templateKey)
+    {
+        var slug = SanitizeSegment(platform.Slug);
+        var key = SanitizeSegment(templateKey);
+        return Path.Combine(_vaultRoot, slug, "templates", $"{key}.repx");
+    }
+
+    private static string SanitizeSegment(string value)
+    {
+        var invalid = Path.GetInvalidFileNameChars();
+        return new string(value.Select(c => invalid.Contains(c) ? '_' : c).ToArray());
+    }
+
+    private string CoreUrl => (_config["Core:Url"] ?? "").TrimEnd('/');
+
+    private void EnsureVaultDirectory(string path)
+    {
+        var dir = Path.GetDirectoryName(path);
+        if (dir != null)
+        {
+            Directory.CreateDirectory(dir);
+        }
     }
 
     /// <summary>
-    /// Upload a .repx template to Google Drive
-    /// Path: {platform_id}/templates/{template_key}.repx
-    /// Uses the platform's own Supabase project and service key.
+    /// Loads a template for rendering. Tries the local vault first; if missing
+    /// and a Drive fileId is provided, downloads from Drive and caches it.
+    /// </summary>
+    public async Task<byte[]?> GetTemplateAsync(TenantConfig platform, string templateKey, string? fileId = null)
+    {
+        var vaultPath = GetVaultPath(platform, templateKey);
+
+        // 1. Local vault (fast path, no network)
+        if (File.Exists(vaultPath))
+        {
+            _logger.LogInformation("Template '{TemplateKey}' served from local vault", templateKey);
+            return await File.ReadAllBytesAsync(vaultPath);
+        }
+
+        // 2. Fallback to Drive by fileId, then cache in the vault
+        if (!string.IsNullOrEmpty(fileId))
+        {
+            var bytes = await DownloadFromDriveAsync(platform, fileId);
+            if (bytes != null)
+            {
+                await SaveToVaultAsync(vaultPath, bytes);
+                return bytes;
+            }
+        }
+
+        _logger.LogWarning("Template '{TemplateKey}' not found in vault or Drive", templateKey);
+        return null;
+    }
+
+    /// <summary>
+    /// Uploads a template: saves to the local vault and mirrors to Google Drive
+    /// (Drive keeps the single backup / source of truth).
     /// </summary>
     public async Task<string?> UploadTemplate(TenantConfig platform, string templateKey, byte[] repxBytes)
     {
-        var supabaseUrl = platform.SupabaseUrl;
-        var supabaseKey = platform.SupabaseServiceKey;
-        var platformId = platform.Id;
+        var vaultPath = GetVaultPath(platform, templateKey);
+        await SaveToVaultAsync(vaultPath, repxBytes);
 
-        var fileBase64 = Convert.ToBase64String(repxBytes);
-        var fileName = $"{templateKey}.repx";
-
-        var payload = new
-        {
-            platform_id = platformId,
-            fileBase64,
-            mimeType = "application/xml",
-            fileName,
-            path_components = new[] { "templates" },
-            tenantId = platformId
-        };
-
-        var content = new StringContent(
-            JsonSerializer.Serialize(payload),
-            Encoding.UTF8,
-            "application/json"
-        );
-
-        _httpClient.DefaultRequestHeaders.Clear();
-        _httpClient.DefaultRequestHeaders.Add("apikey", supabaseKey);
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-
-        var response = await _httpClient.PostAsync(
-            $"{supabaseUrl}/functions/v1/google-drive-upload",
-            content
-        );
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var error = await response.Content.ReadAsStringAsync();
-            _logger.LogError("Failed to upload template to Google Drive: {Error}", error);
-            throw new Exception($"Google Drive upload failed: {error}");
-        }
-
-        var result = JsonSerializer.Deserialize<JsonElement>(
-            await response.Content.ReadAsStringAsync()
-        );
-
-        return result.GetProperty("fileId").GetString();
+        var fileId = await UploadToDriveAsync(platform, templateKey, repxBytes);
+        return fileId;
     }
 
-    /// <summary>
-    /// Download a .repx template from Google Drive
-    /// </summary>
-    public async Task<byte[]?> DownloadTemplate(TenantConfig platform, string templateKey)
+    private async Task SaveToVaultAsync(string vaultPath, byte[] bytes)
     {
-        var supabaseUrl = platform.SupabaseUrl;
-        var supabaseKey = platform.SupabaseServiceKey;
-        var platformId = platform.Id;
+        EnsureVaultDirectory(vaultPath);
+        await File.WriteAllBytesAsync(vaultPath, bytes);
+    }
 
-        _httpClient.DefaultRequestHeaders.Clear();
-        _httpClient.DefaultRequestHeaders.Add("apikey", supabaseKey);
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-
-        // Search for the file
-        var fileName = $"{templateKey}.repx";
-        var searchQuery = $"name = '{fileName}' and '{platformId}/templates' in parents and trashed = false";
-        var searchUrl = $"https://www.googleapis.com/drive/v3/files?q={Uri.EscapeDataString(searchQuery)}&fields=files(id,name)&key={supabaseKey}";
-
-        var searchResponse = await _httpClient.GetAsync(searchUrl);
-        if (!searchResponse.IsSuccessStatusCode)
+    private async Task<byte[]?> DownloadFromDriveAsync(TenantConfig platform, string fileId)
+    {
+        try
         {
-            _logger.LogError("Failed to search for template in Google Drive");
+            var payload = JsonSerializer.Serialize(new { fileId, platformId = platform.Id });
+            var response = await CallCoreAsync("google-drive-download", payload);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Drive download failed with status {Status}: {Body}", response.StatusCode, errorBody);
+                return null;
+            }
+
+            var result = JsonSerializer.Deserialize<JsonElement>(
+                await response.Content.ReadAsStringAsync()
+            );
+
+            if (!result.TryGetProperty("fileBase64", out var base64Prop))
+            {
+                _logger.LogError("Drive download response missing fileBase64");
+                return null;
+            }
+
+            return Convert.FromBase64String(base64Prop.GetString() ?? "");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to download template from Drive");
             return null;
         }
+    }
 
-        var searchResult = JsonSerializer.Deserialize<JsonElement>(
-            await searchResponse.Content.ReadAsStringAsync()
-        );
-
-        var files = searchResult.GetProperty("files");
-        if (files.GetArrayLength() == 0)
+    private async Task<string?> UploadToDriveAsync(TenantConfig platform, string templateKey, byte[] repxBytes)
+    {
+        try
         {
-            _logger.LogWarning("Template '{TemplateKey}' not found in Google Drive", templateKey);
+            var payload = JsonSerializer.Serialize(new
+            {
+                platform_id = platform.Id,
+                fileBase64 = Convert.ToBase64String(repxBytes),
+                mimeType = "application/xml",
+                fileName = $"{templateKey}.repx",
+                path_components = new[] { "templates" },
+                tenantId = platform.Slug
+            });
+
+            var response = await CallCoreAsync("google-drive-upload", payload);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Drive upload failed with status {Status}", response.StatusCode);
+                return null;
+            }
+
+            var result = JsonSerializer.Deserialize<JsonElement>(
+                await response.Content.ReadAsStringAsync()
+            );
+
+            if (result.TryGetProperty("fileId", out var fileIdProp))
+            {
+                return fileIdProp.GetString();
+            }
+
             return null;
         }
-
-        var fileId = files[0].GetProperty("id").GetString();
-
-        // Download the file content
-        var downloadUrl = $"https://www.googleapis.com/drive/v3/files/{fileId}?alt=media&key={supabaseKey}";
-        var downloadResponse = await _httpClient.GetAsync(downloadUrl);
-        if (!downloadResponse.IsSuccessStatusCode)
+        catch (Exception ex)
         {
-            _logger.LogError("Failed to download template from Google Drive");
+            _logger.LogError(ex, "Failed to upload template to Drive");
             return null;
         }
-
-        return await downloadResponse.Content.ReadAsByteArrayAsync();
     }
 
     /// <summary>
-    /// List all templates for a platform
+    /// Lists templates from the local vault and Google Drive (source of truth).
     /// </summary>
     public async Task<List<TemplateInfo>> ListTemplates(TenantConfig platform)
     {
-        var supabaseUrl = platform.SupabaseUrl;
-        var supabaseKey = platform.SupabaseServiceKey;
-        var platformId = platform.Id;
-
-        _httpClient.DefaultRequestHeaders.Clear();
-        _httpClient.DefaultRequestHeaders.Add("apikey", supabaseKey);
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-
-        var searchQuery = $"mimeType = 'application/xml' and '{platformId}/templates' in parents and trashed = false";
-        var searchUrl = $"https://www.googleapis.com/drive/v3/files?q={Uri.EscapeDataString(searchQuery)}&fields=files(id,name,createdTime,modifiedTime)&orderBy=name&key={supabaseKey}";
-
-        var searchResponse = await _httpClient.GetAsync(searchUrl);
-        if (!searchResponse.IsSuccessStatusCode)
-        {
-            _logger.LogError("Failed to list templates from Google Drive");
-            return new List<TemplateInfo>();
-        }
-
-        var searchResult = JsonSerializer.Deserialize<JsonElement>(
-            await searchResponse.Content.ReadAsStringAsync()
-        );
-
-        var files = searchResult.GetProperty("files");
         var templates = new List<TemplateInfo>();
 
-        foreach (var file in files.EnumerateArray())
+        // Local vault
+        var slug = SanitizeSegment(platform.Slug);
+        var templatesDir = Path.Combine(_vaultRoot, slug, "templates");
+        if (Directory.Exists(templatesDir))
         {
-            templates.Add(new TemplateInfo
+            foreach (var file in Directory.GetFiles(templatesDir, "*.repx"))
             {
-                Id = file.GetProperty("id").GetString() ?? "",
-                Name = file.GetProperty("name").GetString()?.Replace(".repx", "") ?? "",
-                CreatedAt = file.TryGetProperty("createdTime", out var ct) ? ct.GetString() ?? "" : "",
-                ModifiedAt = file.TryGetProperty("modifiedTime", out var mt) ? mt.GetString() ?? "" : ""
-            });
+                var info = new FileInfo(file);
+                templates.Add(new TemplateInfo
+                {
+                    Id = "",
+                    Name = Path.GetFileNameWithoutExtension(file),
+                    CreatedAt = info.CreationTimeUtc.ToString("O"),
+                    ModifiedAt = info.LastWriteTimeUtc.ToString("O")
+                });
+            }
+        }
+
+        // Google Drive
+        var driveTemplates = await ListFromDriveAsync(platform);
+        foreach (var dt in driveTemplates)
+        {
+            if (templates.All(t => t.Name != dt.Name))
+            {
+                templates.Add(dt);
+            }
         }
 
         return templates;
     }
 
-    /// <summary>
-    /// Delete a template from Google Drive
-    /// </summary>
-    public async Task DeleteTemplate(TenantConfig platform, string templateKey)
+    private async Task<List<TemplateInfo>> ListFromDriveAsync(TenantConfig platform)
     {
-        var supabaseUrl = platform.SupabaseUrl;
-        var supabaseKey = platform.SupabaseServiceKey;
-        var platformId = platform.Id;
-
-        _httpClient.DefaultRequestHeaders.Clear();
-        _httpClient.DefaultRequestHeaders.Add("apikey", supabaseKey);
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
-
-        var fileName = $"{templateKey}.repx";
-        var searchQuery = $"name = '{fileName}' and '{platformId}/templates' in parents and trashed = false";
-        var searchUrl = $"https://www.googleapis.com/drive/v3/files?q={Uri.EscapeDataString(searchQuery)}&fields=files(id)&key={supabaseKey}";
-
-        var searchResponse = await _httpClient.GetAsync(searchUrl);
-        if (!searchResponse.IsSuccessStatusCode)
+        try
         {
-            _logger.LogError("Failed to search for template to delete");
-            return;
+            var payload = JsonSerializer.Serialize(new { platformId = platform.Id });
+            var response = await CallCoreAsync("google-drive-list", payload);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Drive list failed with status {Status}: {Body}", response.StatusCode, errorBody);
+                return new List<TemplateInfo>();
+            }
+
+            var result = JsonSerializer.Deserialize<JsonElement>(
+                await response.Content.ReadAsStringAsync()
+            );
+
+            if (!result.TryGetProperty("files", out var files))
+            {
+                return new List<TemplateInfo>();
+            }
+
+            var list = new List<TemplateInfo>();
+            foreach (var file in files.EnumerateArray())
+            {
+                list.Add(new TemplateInfo
+                {
+                    Id = file.TryGetProperty("id", out var id) ? id.GetString() ?? "" : "",
+                    Name = file.TryGetProperty("name", out var name) ? name.GetString()?.Replace(".repx", "") ?? "" : "",
+                    CreatedAt = file.TryGetProperty("createdTime", out var ct) ? ct.GetString() ?? "" : "",
+                    ModifiedAt = file.TryGetProperty("modifiedTime", out var mt) ? mt.GetString() ?? "" : ""
+                });
+            }
+
+            return list;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to list templates from Drive");
+            return new List<TemplateInfo>();
+        }
+    }
+
+    /// <summary>
+    /// Deletes a template from the local vault and Google Drive.
+    /// </summary>
+    public async Task DeleteTemplate(TenantConfig platform, string templateKey, string? fileId = null)
+    {
+        // Local vault
+        var vaultPath = GetVaultPath(platform, templateKey);
+        if (File.Exists(vaultPath))
+        {
+            File.Delete(vaultPath);
+            _logger.LogInformation("Template '{TemplateKey}' removed from local vault", templateKey);
         }
 
-        var searchResult = JsonSerializer.Deserialize<JsonElement>(
-            await searchResponse.Content.ReadAsStringAsync()
-        );
-
-        var files = searchResult.GetProperty("files");
-        if (files.GetArrayLength() == 0)
+        // Google Drive
+        if (!string.IsNullOrEmpty(fileId))
         {
-            _logger.LogWarning("Template '{TemplateKey}' not found for deletion", templateKey);
-            return;
+            await DeleteFromDriveAsync(platform, fileId);
         }
+    }
 
-        var fileId = files[0].GetProperty("id").GetString();
-
-        // Delete the file
-        var deleteUrl = $"https://www.googleapis.com/drive/v3/files/{fileId}?key={supabaseKey}";
-        var deleteResponse = await _httpClient.DeleteAsync(deleteUrl);
-        if (!deleteResponse.IsSuccessStatusCode)
+    private async Task DeleteFromDriveAsync(TenantConfig platform, string fileId)
+    {
+        try
         {
-            _logger.LogError("Failed to delete template from Google Drive");
+            var payload = JsonSerializer.Serialize(new { fileId, platform_id = platform.Id });
+            var response = await CallCoreAsync("google-drive-delete", payload);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Drive delete failed with status {Status}", response.StatusCode);
+            }
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to delete template from Drive");
+        }
+    }
+
+    private async Task<HttpResponseMessage> CallCoreAsync(string function, string jsonPayload)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post,
+            $"{CoreUrl}/functions/v1/{function}");
+
+        // Gateway auth (public anon key) + service secret for the function itself
+        var anonKey = _config["Core:AnonKey"] ?? "";
+        request.Headers.Add("apikey", anonKey);
+        request.Headers.Add("Authorization", $"Bearer {anonKey}");
+        request.Headers.Add("X-Service-Secret", _config["Core:ServiceSecret"] ?? "");
+
+        request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        return await _httpClient.SendAsync(request, cts.Token);
     }
 }
 

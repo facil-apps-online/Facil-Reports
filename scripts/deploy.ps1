@@ -38,6 +38,7 @@ try {
         --exclude="obj" `
         --exclude=".env" `
         --exclude="node_modules" `
+        --exclude="FacilReports/Reports/vault" `
         .
     if ($LASTEXITCODE -ne 0) { throw "tar failed" }
 } finally {
@@ -68,4 +69,4 @@ Write-Host "=========================================="
 Write-Host "  Deploy Complete!"
 Write-Host "=========================================="
 Write-Host ""
-Write-Host "Health: http://$Server/health"
+Write-Host "Health: https://reports.facil-apps.online/api/health"

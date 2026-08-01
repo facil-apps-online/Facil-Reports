@@ -18,17 +18,19 @@ public class ReportGenerator
     }
 
     /// <summary>
-    /// Generate a PDF from a template and JSON data
+    /// Generate a PDF from a template and JSON data.
+    /// The template is loaded from the local vault or from Drive by fileId.
     /// </summary>
     public async Task<byte[]> GenerateFromJson(
         Models.TenantConfig tenant,
         string templateKey,
-        Dictionary<string, object> data)
+        Dictionary<string, object> data,
+        string? fileId = null)
     {
-        // 1. Load template from Google Drive
-        var repxBytes = await _driveService.DownloadTemplate(tenant, templateKey);
+        // 1. Load template (local vault first, then Drive by fileId)
+        var repxBytes = await _driveService.GetTemplateAsync(tenant, templateKey, fileId);
         if (repxBytes == null)
-            throw new FileNotFoundException($"Template '{templateKey}' not found in Google Drive");
+            throw new FileNotFoundException($"Template '{templateKey}' not found");
 
         // 2. Load the XtraReport from bytes
         var report = new XtraReport();
