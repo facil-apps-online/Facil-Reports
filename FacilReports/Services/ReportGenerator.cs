@@ -18,15 +18,15 @@ public class ReportGenerator
     }
 
     /// <summary>
-    /// Generate a PDF from a template key and JSON data
+    /// Generate a PDF from a template and JSON data
     /// </summary>
     public async Task<byte[]> GenerateFromJson(
-        string tenantId,
+        Models.TenantConfig tenant,
         string templateKey,
         Dictionary<string, object> data)
     {
         // 1. Load template from Google Drive
-        var repxBytes = await _driveService.DownloadTemplate(tenantId, templateKey);
+        var repxBytes = await _driveService.DownloadTemplate(tenant, templateKey);
         if (repxBytes == null)
             throw new FileNotFoundException($"Template '{templateKey}' not found in Google Drive");
 

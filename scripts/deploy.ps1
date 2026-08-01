@@ -23,7 +23,7 @@ if (-not (Test-Path $Key)) {
 
 # 1. Verify SSH connection
 Write-Host "[1/4] Verifying SSH connection..."
-& ssh -o BatchMode=yes -o ConnectTimeout=10 -i $Key root@$Server "echo SSH-OK"
+& ssh -o BatchMode=yes -o ConnectTimeout=10 -i $Key "root@${Server}" "echo SSH-OK"
 if ($LASTEXITCODE -ne 0) {
     throw "SSH connection failed"
 }
@@ -45,11 +45,11 @@ try {
 }
 
 # 3. Transfer and extract on server
-Write-Host "[3/4] Transferring to $Server:$RemoteDir ..."
-& scp -o BatchMode=yes -i $Key $TempTar root@$Server:/tmp/facilreports.tar.gz
+Write-Host "[3/4] Transferring to ${Server}:$RemoteDir ..."
+& scp -o BatchMode=yes -i $Key $TempTar "root@${Server}:/tmp/facilreports.tar.gz"
 if ($LASTEXITCODE -ne 0) { throw "scp failed" }
 
-& ssh -o BatchMode=yes -i $Key root@$Server "mkdir -p $RemoteDir && tar -xzf /tmp/facilreports.tar.gz -C $RemoteDir && rm -f /tmp/facilreports.tar.gz"
+& ssh -o BatchMode=yes -i $Key "root@${Server}" "mkdir -p $RemoteDir && tar -xzf /tmp/facilreports.tar.gz -C $RemoteDir && rm -f /tmp/facilreports.tar.gz"
 if ($LASTEXITCODE -ne 0) { throw "extract failed" }
 
 # 4. Build and start container
@@ -57,7 +57,7 @@ if ($SkipBuild) {
     Write-Host "[4/4] Skipping Docker build (SkipBuild)."
 } else {
     Write-Host "[4/4] Building Docker image and starting container..."
-    & ssh -o BatchMode=yes -i $Key root@$Server "cd $RemoteDir && docker compose build --no-cache && docker compose up -d"
+    & ssh -o BatchMode=yes -i $Key "root@${Server}" "cd $RemoteDir && docker compose build --no-cache && docker compose up -d"
     if ($LASTEXITCODE -ne 0) { throw "docker build/up failed" }
 }
 

@@ -31,7 +31,7 @@ public class ApiKeyMiddleware
         }
 
         // Resolve platform from API key
-        var platform = platformResolver.Resolve(apiKey!);
+        var platform = await platformResolver.ResolveAsync(apiKey!);
         if (platform == null)
         {
             context.Response.StatusCode = 401;

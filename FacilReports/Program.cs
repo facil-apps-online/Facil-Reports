@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<GoogleDriveService>();
 
 // Custom services

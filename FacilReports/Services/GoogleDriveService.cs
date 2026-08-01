@@ -1,37 +1,36 @@
 using System.Text;
 using System.Text.Json;
+using FacilReports.Models;
 
 namespace FacilReports.Services;
 
 /// <summary>
-/// Service to interact with Google Drive via Supabase Edge Function
-/// Uses the existing google-drive-upload edge function from Core
+/// Service to interact with Google Drive via the platform's Supabase Edge Function
+/// (google-drive-upload lives in each platform's own Supabase project).
 /// </summary>
 public class GoogleDriveService
 {
     private readonly HttpClient _httpClient;
-    private readonly IConfiguration _config;
     private readonly ILogger<GoogleDriveService> _logger;
 
     public GoogleDriveService(
         HttpClient httpClient,
-        IConfiguration config,
         ILogger<GoogleDriveService> logger)
     {
         _httpClient = httpClient;
-        _config = config;
         _logger = logger;
     }
 
     /// <summary>
     /// Upload a .repx template to Google Drive
-    /// Path: {tenant_id}/templates/{template_key}.repx
+    /// Path: {platform_id}/templates/{template_key}.repx
+    /// Uses the platform's own Supabase project and service key.
     /// </summary>
-    public async Task<string?> UploadTemplate(string tenantId, string templateKey, byte[] repxBytes)
+    public async Task<string?> UploadTemplate(TenantConfig platform, string templateKey, byte[] repxBytes)
     {
-        var supabaseUrl = _config["Supabase:Url"];
-        var supabaseKey = _config["Supabase:ServiceKey"];
-        var platformId = _config["Supabase:PlatformId"];
+        var supabaseUrl = platform.SupabaseUrl;
+        var supabaseKey = platform.SupabaseServiceKey;
+        var platformId = platform.Id;
 
         var fileBase64 = Convert.ToBase64String(repxBytes);
         var fileName = $"{templateKey}.repx";
@@ -43,7 +42,7 @@ public class GoogleDriveService
             mimeType = "application/xml",
             fileName,
             path_components = new[] { "templates" },
-            tenantId
+            tenantId = platformId
         };
 
         var content = new StringContent(
@@ -78,10 +77,11 @@ public class GoogleDriveService
     /// <summary>
     /// Download a .repx template from Google Drive
     /// </summary>
-    public async Task<byte[]?> DownloadTemplate(string tenantId, string templateKey)
+    public async Task<byte[]?> DownloadTemplate(TenantConfig platform, string templateKey)
     {
-        var supabaseUrl = _config["Supabase:Url"];
-        var supabaseKey = _config["Supabase:ServiceKey"];
+        var supabaseUrl = platform.SupabaseUrl;
+        var supabaseKey = platform.SupabaseServiceKey;
+        var platformId = platform.Id;
 
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("apikey", supabaseKey);
@@ -89,7 +89,7 @@ public class GoogleDriveService
 
         // Search for the file
         var fileName = $"{templateKey}.repx";
-        var searchQuery = $"name = '{fileName}' and '{tenantId}/templates' in parents and trashed = false";
+        var searchQuery = $"name = '{fileName}' and '{platformId}/templates' in parents and trashed = false";
         var searchUrl = $"https://www.googleapis.com/drive/v3/files?q={Uri.EscapeDataString(searchQuery)}&fields=files(id,name)&key={supabaseKey}";
 
         var searchResponse = await _httpClient.GetAsync(searchUrl);
@@ -125,18 +125,19 @@ public class GoogleDriveService
     }
 
     /// <summary>
-    /// List all templates for a tenant
+    /// List all templates for a platform
     /// </summary>
-    public async Task<List<TemplateInfo>> ListTemplates(string tenantId)
+    public async Task<List<TemplateInfo>> ListTemplates(TenantConfig platform)
     {
-        var supabaseUrl = _config["Supabase:Url"];
-        var supabaseKey = _config["Supabase:ServiceKey"];
+        var supabaseUrl = platform.SupabaseUrl;
+        var supabaseKey = platform.SupabaseServiceKey;
+        var platformId = platform.Id;
 
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("apikey", supabaseKey);
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
 
-        var searchQuery = $"mimeType = 'application/xml' and '{tenantId}/templates' in parents and trashed = false";
+        var searchQuery = $"mimeType = 'application/xml' and '{platformId}/templates' in parents and trashed = false";
         var searchUrl = $"https://www.googleapis.com/drive/v3/files?q={Uri.EscapeDataString(searchQuery)}&fields=files(id,name,createdTime,modifiedTime)&orderBy=name&key={supabaseKey}";
 
         var searchResponse = await _httpClient.GetAsync(searchUrl);
@@ -170,17 +171,18 @@ public class GoogleDriveService
     /// <summary>
     /// Delete a template from Google Drive
     /// </summary>
-    public async Task DeleteTemplate(string tenantId, string templateKey)
+    public async Task DeleteTemplate(TenantConfig platform, string templateKey)
     {
-        var supabaseUrl = _config["Supabase:Url"];
-        var supabaseKey = _config["Supabase:ServiceKey"];
+        var supabaseUrl = platform.SupabaseUrl;
+        var supabaseKey = platform.SupabaseServiceKey;
+        var platformId = platform.Id;
 
         _httpClient.DefaultRequestHeaders.Clear();
         _httpClient.DefaultRequestHeaders.Add("apikey", supabaseKey);
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {supabaseKey}");
 
         var fileName = $"{templateKey}.repx";
-        var searchQuery = $"name = '{fileName}' and '{tenantId}/templates' in parents and trashed = false";
+        var searchQuery = $"name = '{fileName}' and '{platformId}/templates' in parents and trashed = false";
         var searchUrl = $"https://www.googleapis.com/drive/v3/files?q={Uri.EscapeDataString(searchQuery)}&fields=files(id)&key={supabaseKey}";
 
         var searchResponse = await _httpClient.GetAsync(searchUrl);

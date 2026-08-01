@@ -28,7 +28,7 @@ public class ReportsController : ControllerBase
         try
         {
             var pdfBytes = await _generator.GenerateFromJson(
-                tenant.Id,
+                tenant,
                 request.TemplateKey,
                 request.Data
             );

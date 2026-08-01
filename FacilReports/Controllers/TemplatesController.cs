@@ -29,7 +29,7 @@ public class TemplatesController : ControllerBase
             var repxBytes = Convert.FromBase64String(request.RepxBase64);
             
             var fileId = await _driveService.UploadTemplate(
-                tenant.Id,
+                tenant,
                 request.TemplateKey,
                 repxBytes
             );
@@ -59,7 +59,7 @@ public class TemplatesController : ControllerBase
 
         try
         {
-            var repxBytes = await _driveService.DownloadTemplate(tenant.Id, templateKey);
+            var repxBytes = await _driveService.DownloadTemplate(tenant, templateKey);
             if (repxBytes == null)
                 return NotFound(new { error = $"Template '{templateKey}' not found" });
 
@@ -91,7 +91,7 @@ public class TemplatesController : ControllerBase
 
         try
         {
-            var templates = await _driveService.ListTemplates(tenant.Id);
+            var templates = await _driveService.ListTemplates(tenant);
             return Ok(new { templates });
         }
         catch (Exception ex)
@@ -111,7 +111,7 @@ public class TemplatesController : ControllerBase
 
         try
         {
-            await _driveService.DeleteTemplate(tenant.Id, templateKey);
+            await _driveService.DeleteTemplate(tenant, templateKey);
             return Ok(new { success = true, message = $"Template '{templateKey}' deleted" });
         }
         catch (Exception ex)
