@@ -16,6 +16,10 @@ RUN dotnet publish "FacilReports/FacilReports.csproj" -c Release -o /app/publish
 # Final stage
 FROM base AS final
 WORKDIR /app
+
+# Install curl for the Docker healthcheck
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/publish .
 
 # Copy Reports directory
