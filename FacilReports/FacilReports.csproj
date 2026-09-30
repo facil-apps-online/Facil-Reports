@@ -7,9 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="25.1.13" />
-    <PackageReference Include="DevExpress.Drawing.Skia" Version="25.1.13" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.0" />
+    <PackageReference Include="FastReport.OpenSource" Version="2026.2.8" />
+    <PackageReference Include="FastReport.OpenSource.Export.PdfSimple" Version="2026.2.8" />
+    <!-- Version fijada a lo que cubre nuestra licencia actual (suscripción v22) — ver
+         devexpress-support-reply-2.txt. DevExpress.Drawing.Skia no existe en esta serie; el
+         paquete DevExpress.Drawing (dependencia transitiva de AspNetCore.Reporting) trae su
+         propio renderizador multiplataforma sin depender de SkiaSharp ni de libgdiplus. -->
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="22.1.15" />
+    <!-- Requerido por DevExpress Reporting: el modelo del Report Designer se serializa con
+         converters propios de Json.NET (ej. CultureInfo, tipos polimórficos) — sin esto,
+         System.Text.Json (el serializador por defecto) produce JSON corrupto/incompleto. -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.*" />
   </ItemGroup>
 
 </Project>

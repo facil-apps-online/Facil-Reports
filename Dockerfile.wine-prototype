@@ -1,0 +1,62 @@
+# PROTOTIPO EXPERIMENTAL — no forma parte del despliegue real (docker-compose.yml no lo referencia).
+#
+# Hipótesis a probar: el problema de CanGrow/WordWrap (texto que nunca crece verticalmente, ver
+# el hilo de soporte de DevExpress) es un límite real de libgdiplus (la reimplementación de GDI+
+# para Linux que usa System.Drawing.Common en DevExpress 22.1), no de nuestra configuración. Wine
+# trae su propia implementación de gdiplus.dll (mucho más completa que libgdiplus), así que
+# publicamos FacilReports como win-x64 self-contained y lo corremos con Wine, en vez de nativo en
+# Linux — sin cambiar ni una línea del código de la aplicación.
+#
+# Si el mismo .repx problemático renderiza bien acá, vale la pena evaluarlo para producción
+# (con todas las advertencias de soporte/estabilidad ya discutidas). Si no, se descarta sin haber
+# tocado el despliegue real.
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+ARG DEVEXPRESS_LICENSE_KEY=""
+ENV DevExpress_License=${DEVEXPRESS_LICENSE_KEY}
+
+ARG DEVEXPRESS_NUGET_FEED_URL=""
+RUN if [ -n "$DEVEXPRESS_NUGET_FEED_URL" ]; then dotnet nuget add source "$DEVEXPRESS_NUGET_FEED_URL" -n DevExpress; fi
+
+COPY ["FacilReports/FacilReports.csproj", "FacilReports/"]
+# NU1605 (package downgrade) solo aparece al restaurar para el RID win-x64 — la resolución de
+# dependencias transitivas de DevExpress.AspNetCore.Reporting 22.1.15 difiere de la que usa el
+# build Linux normal. Es un warning-as-error del propio restore, no del csproj real (que no se
+# toca); se desactiva solo para este build de prototipo.
+RUN dotnet restore "FacilReports/FacilReports.csproj" -r win-x64 -p:NoWarn=NU1605
+
+COPY FacilReports/ FacilReports/
+# Self-contained: el propio publish trae el runtime .NET para Windows — Wine no necesita nada de
+# .NET instalado aparte, solo intercepta el .exe resultante como cualquier binario Windows nativo.
+RUN dotnet publish "FacilReports/FacilReports.csproj" -c Release -r win-x64 --self-contained true \
+    -p:PublishSingleFile=false -p:NoWarn=NU1605 -o /app/publish
+
+FROM debian:bookworm-slim AS final
+WORKDIR /app
+
+# Wine (repo oficial WineHQ, no el paquete de Debian que suele ir desactualizado) + Xvfb (GDI+
+# asume un contexto gráfico incluso para trabajo "sin pantalla") + fuentes básicas para que el
+# texto tenga con qué medirse/dibujarse.
+RUN dpkg --add-architecture i386 \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates curl gnupg wget xvfb fontconfig fonts-liberation \
+    && mkdir -pm755 /etc/apt/keyrings \
+    && wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key \
+    && wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources \
+    && apt-get update \
+    && apt-get install -y --install-recommends winehq-stable \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /app/publish .
+COPY FacilReports/Reports/ /app/Reports/
+
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV WINEDEBUG=-all
+EXPOSE 8080
+
+# Xvfb en background, un WINEPREFIX propio (primera corrida inicializa el prefijo, más lenta),
+# y el .exe self-contained corriendo bajo Wine en vez de "dotnet FacilReports.dll" nativo.
+ENTRYPOINT ["sh", "-c", "Xvfb :99 -screen 0 1024x768x16 & export DISPLAY=:99 && wine FacilReports.exe"]

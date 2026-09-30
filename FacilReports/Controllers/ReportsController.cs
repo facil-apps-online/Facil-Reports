@@ -9,10 +9,17 @@ namespace FacilReports.Controllers;
 public class ReportsController : ControllerBase
 {
     private readonly ReportGenerator _generator;
+    private readonly FastReportGenerator _fastReportGenerator;
+    private readonly ILogger<ReportsController> _logger;
 
-    public ReportsController(ReportGenerator generator)
+    public ReportsController(
+        ReportGenerator generator,
+        FastReportGenerator fastReportGenerator,
+        ILogger<ReportsController> logger)
     {
         _generator = generator;
+        _fastReportGenerator = fastReportGenerator;
+        _logger = logger;
     }
 
     /// <summary>
@@ -27,12 +34,20 @@ public class ReportsController : ControllerBase
 
         try
         {
-            var pdfBytes = await _generator.GenerateFromJson(
-                tenant,
-                request.TemplateKey,
-                request.Data,
-                request.FileId
-            );
+            byte[] pdfBytes;
+            try
+            {
+                // REPX is still the only stored artifact. FastReport receives an in-memory
+                // conversion for this request; DevExpress remains the compatibility fallback.
+                pdfBytes = await _fastReportGenerator.GenerateFromJson(
+                    tenant, request.TemplateKey, request.Data, request.FileId);
+            }
+            catch (NotSupportedException ex)
+            {
+                _logger.LogWarning(ex, "REPX {TemplateKey} aún no es compatible con FastReport; usando DevExpress.", request.TemplateKey);
+                pdfBytes = await _generator.GenerateFromJson(
+                    tenant, request.TemplateKey, request.Data, request.FileId);
+            }
 
             // Return as base64 if requested
             if (request.AsBase64 == true)

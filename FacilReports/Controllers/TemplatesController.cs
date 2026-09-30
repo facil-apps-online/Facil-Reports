@@ -81,6 +81,34 @@ public class TemplatesController : ControllerBase
     }
 
     /// <summary>
+    /// Get a .repx template as base64 JSON, with templateKey as a query param instead of a route
+    /// segment — templateKey routinely contains "/" (e.g. "dgs/factura1"), which the {templateKey}
+    /// route above can't carry as a single segment.
+    /// </summary>
+    [HttpGet("lookup")]
+    public async Task<IActionResult> LookupTemplate([FromQuery] string templateKey)
+    {
+        var tenant = HttpContext.Items["Tenant"] as TenantConfig;
+        if (tenant == null) return Unauthorized();
+
+        if (string.IsNullOrWhiteSpace(templateKey))
+            return BadRequest(new { error = "templateKey es requerido" });
+
+        try
+        {
+            var repxBytes = await _driveService.GetTemplateAsync(tenant, templateKey, null);
+            if (repxBytes == null)
+                return NotFound(new { error = $"Template '{templateKey}' not found" });
+
+            return Ok(new { success = true, templateKey, repxBase64 = Convert.ToBase64String(repxBytes) });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
+    }
+
+    /// <summary>
     /// List all templates for the tenant
     /// </summary>
     [HttpGet("list")]

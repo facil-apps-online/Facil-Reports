@@ -1,0 +1,67 @@
+{
+  "Documento": {
+    "EmisorLogoUrl": "https://cdn.facilfactura.co/clientes/ejemplo-sas/logo-claro.png",
+    "EmisorRazonSocial": "Comercializadora Ejemplo S.A.S.",
+    "EmisorNombreComercial": "Ejemplo Store",
+    "EmisorNit": "900303194",
+    "EmisorDv": "6",
+    "EmisorDireccion": "Calle 93 # 15-20, Oficina 501",
+    "EmisorCiudad": "Bogotá D.C.",
+    "EmisorTelefono": "+57 601 555 0199",
+    "EmisorEmail": "facturacion@ejemplo-sas.com.co",
+    "EmisorCalidadTributaria": "Responsable de IVA",
+
+    "AdquirenteNombre": "Juan Carlos Pérez Gómez",
+    "AdquirenteTipoIdentificacion": "CC",
+    "AdquirenteIdentificacion": "1032456789",
+    "AdquirenteDireccion": "Carrera 45 # 22-10, Apto 302",
+    "AdquirenteCiudad": "Medellín",
+    "AdquirenteTelefono": "+57 300 555 0134",
+    "AdquirenteEmail": "juan.perez@correo-ejemplo.com",
+
+    "DocumentoTipo": "NOTA DÉBITO ELECTRÓNICA",
+    "DocumentoNumero": "ND 12",
+    "NotaReferencia": "Ajusta el documento N° FES 990 · CUFE b1e3f7a2c4d5e6f7890123456789abcdef0123456789abcdef0123456789ab · Motivo: Intereses de mora por pago extemporáneo",
+    "ResolucionTexto": "Resolución DIAN 18760000003 · Rango ND 1-2000 · Vigente hasta 31/12/2026",
+    "FechaGeneracion": "05/10/2026 14:05:00",
+    "FechaVencimiento": null,
+    "Cufe": "d3a5b9c4e6f7890123456789abcdef0123456789abcdef0123456789abcdef",
+    "QrCode": "NumFac=ND12\nFecFac=2026-10-05\nHorFac=14:05:00-05:00\nNitFac=900303194\nDocAdq=1032456789\nValFac=15000.00\nValIva=0.00\nValOtroIm=0.00\nValTolFac=15000.00\nCUFE=d3a5b9c4e6f7890123456789abcdef0123456789abcdef0123456789abcdef\nQRCode=https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=d3a5b9c4e6f7890123456789abcdef0123456789abcdef0123456789abcdef",
+    "MedioPago": "Transferencia bancaria",
+    "FormaPago": "Contado",
+    "OrdenCompra": null,
+    "Notas": "Nota débito por intereses de mora causados sobre la Factura FES 990.",
+
+    "Subtotal": "15.000",
+    "Iva": "0",
+    "Descuento": "0",
+    "Cargo": "0",
+    "TotalRetenciones": null,
+    "NetoAPagar": null,
+    "Total": "15.000",
+    "TotalEnLetras": "QUINCE MIL PESOS M/CTE",
+
+    "FabricanteSoftwareNombre": "SoFactory S.A.S.",
+    "FabricanteSoftwareNit": "900.303.194-6",
+    "NombreSoftware": "Facil Factura",
+    "ProveedorTecnologicoNombre": null,
+    "ProveedorTecnologicoNit": null
+  },
+
+  "Items": [
+    {
+      "Codigo": "ND-INT",
+      "Nombre": "Intereses de mora - Factura FES 990",
+      "Cantidad": "1",
+      "Unidad": "Unidad",
+      "ValorUnitario": "15.000",
+      "PorcentajeDescuento": "0%",
+      "TratamientoIva": "Excluido",
+      "PorcentajeIva": "0%",
+      "ValorIva": "0",
+      "TotalLinea": "15.000"
+    }
+  ],
+
+  "Impuestos": []
+}

@@ -1,0 +1,71 @@
+{
+  "Documento": {
+    "EmisorLogoUrl": "https://cdn.facilfactura.co/clientes/ejemplo-sas/logo-claro.png",
+    "EmisorRazonSocial": "Comercializadora Ejemplo S.A.S.",
+    "EmisorNombreComercial": "Ejemplo Store",
+    "EmisorNit": "900303194",
+    "EmisorDv": "6",
+    "EmisorDireccion": "Calle 93 # 15-20, Oficina 501",
+    "EmisorCiudad": "Bogotá D.C.",
+    "EmisorTelefono": "+57 601 555 0199",
+    "EmisorEmail": "facturacion@ejemplo-sas.com.co",
+    "EmisorCalidadTributaria": "Responsable de IVA",
+
+    "AdquirenteNombre": "Juan Carlos Pérez Gómez",
+    "AdquirenteTipoIdentificacion": "CC",
+    "AdquirenteIdentificacion": "1032456789",
+    "AdquirenteDireccion": "Carrera 45 # 22-10, Apto 302",
+    "AdquirenteCiudad": "Medellín",
+    "AdquirenteTelefono": "+57 300 555 0134",
+    "AdquirenteEmail": "juan.perez@correo-ejemplo.com",
+
+    "DocumentoTipo": "NOTA CRÉDITO ELECTRÓNICA",
+    "DocumentoNumero": "NC 45",
+    "NotaReferencia": "Ajusta el documento N° FES 990 · CUFE b1e3f7a2c4d5e6f7890123456789abcdef0123456789abcdef0123456789ab · Motivo: Devolución parcial de mercancía",
+    "ResolucionTexto": "Resolución DIAN 18760000002 · Rango NC 1-2000 · Vigente hasta 31/12/2026",
+    "FechaGeneracion": "26/09/2026 09:40:00",
+    "FechaVencimiento": null,
+    "Cufe": "c2f4a8b3d5e6f7890123456789abcdef0123456789abcdef0123456789abcd",
+    "QrCode": "NumFac=NC45\nFecFac=2026-09-26\nHorFac=09:40:00-05:00\nNitFac=900303194\nDocAdq=1032456789\nValFac=68000.00\nValIva=12920.00\nValOtroIm=0.00\nValTolFac=80920.00\nCUFE=c2f4a8b3d5e6f7890123456789abcdef0123456789abcdef0123456789abcd\nQRCode=https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=c2f4a8b3d5e6f7890123456789abcdef0123456789abcdef0123456789abcd",
+    "MedioPago": "Transferencia bancaria",
+    "FormaPago": "Contado",
+    "OrdenCompra": null,
+    "Notas": "Nota crédito por devolución de 1 unidad de PRD002 (Pantalón de dril clásico).",
+
+    "Subtotal": "68.000",
+    "Iva": "12.920",
+    "Descuento": "0",
+    "Cargo": "0",
+    "TotalRetenciones": "2.356",
+    "NetoAPagar": "78.564",
+    "Total": "80.920",
+    "TotalEnLetras": "OCHENTA MIL NOVECIENTOS VEINTE PESOS M/CTE",
+
+    "FabricanteSoftwareNombre": "SoFactory S.A.S.",
+    "FabricanteSoftwareNit": "900.303.194-6",
+    "NombreSoftware": "Facil Factura",
+    "ProveedorTecnologicoNombre": null,
+    "ProveedorTecnologicoNit": null
+  },
+
+  "Items": [
+    {
+      "Codigo": "PRD002",
+      "Nombre": "Pantalón de dril clásico",
+      "Cantidad": "1",
+      "Unidad": "Unidad",
+      "ValorUnitario": "80.000",
+      "PorcentajeDescuento": "15%",
+      "TratamientoIva": "Gravado",
+      "PorcentajeIva": "19%",
+      "ValorIva": "12.920",
+      "TotalLinea": "80.920"
+    }
+  ],
+
+  "Impuestos": [
+    { "Concepto": "IVA 19%", "Valor": "12.920", "Tipo": "Iva" },
+    { "Concepto": "RETE FUENTE 2.5%", "Valor": "1.700", "Tipo": "Retencion" },
+    { "Concepto": "RETE ICA 0.966%", "Valor": "656", "Tipo": "Retencion" }
+  ]
+}

@@ -2,7 +2,11 @@ version: '3.8'
 
 services:
   facilreports:
-    build: .
+    build:
+      context: .
+      args:
+        DEVEXPRESS_LICENSE_KEY: ${DEVEXPRESS_LICENSE_KEY:-}
+        DEVEXPRESS_NUGET_FEED_URL: ${DEVEXPRESS_NUGET_FEED_URL:-}
     container_name: FacilReports
     restart: unless-stopped
     ports:
