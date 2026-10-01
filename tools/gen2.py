@@ -95,10 +95,11 @@ def build_nomina(size, qr_top):
     brand = mk(ctl, "lblEmisorNombre", "lblBrandName", 0, 0, 900, 90, Font="DejaVu Sans, 11pt, style=Bold", Multiline="true")
     expr(brand, "Text", "[Documento.EmisorRazonSocial]"); expr(brand, "Visible", NO_LOGO)
     rx, rw = (759, 1040) if qr_top else (959, 1000)
-    title = small(mk(ctl, "lblDocTitle", "lblDocTitle", rx, 0, rw, 35), "DejaVu Sans, 8pt, style=Bold")
+    # El título legal de la nómina puede ocupar 2 líneas (p. ej. "NOTA DE ELIMINACIÓN - DOCUMENTO SOPORTE DE PAGO...")
+    title = small(mk(ctl, "lblDocTitle", "lblDocTitle", rx, 0, rw, 70), "DejaVu Sans, 7.5pt, style=Bold")
     expr(title, "Text", "[Documento.DocumentoTipo]")
-    number = small(mk(ctl, "lblDocNumber", "lblDocNumber", rx, 35, rw, 50), "DejaVu Sans Mono, 12pt, style=Bold")
-    period = small(mk(ctl, "lblResolucion", "lblPeriodo", rx, 90, rw, 60), "DejaVu Sans, 6.5pt")
+    number = small(mk(ctl, "lblDocNumber", "lblDocNumber", rx, 70, rw, 50), "DejaVu Sans Mono, 12pt, style=Bold")
+    period = small(mk(ctl, "lblResolucion", "lblPeriodo", rx, 122, rw, 35), "DejaVu Sans, 6.5pt")
     expr(period, "Text", "'Período: ' + [Documento.PeriodoTexto]")
     pc = [logo, brand, title, number, period]
     if qr_top:

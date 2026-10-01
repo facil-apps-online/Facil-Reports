@@ -41,7 +41,7 @@
             <Item2 Ref="21" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.QrImageUrl]) &gt; 0" />
           </ExpressionBindings>
         </Item6>
-        <Item7 Ref="22" ControlType="XRLabel" Name="lblCufeTop" Multiline="true" SizeF="1100,45" LocationFloat="859,205" Dpi="254" Font="DejaVu Sans Mono, 5.5pt" ForeColor="255,90,90,90" TextAlignment="TopRight">
+        <Item7 Ref="22" ControlType="XRLabel" Name="lblCufeTop" Multiline="true" SizeF="1250,45" LocationFloat="709,205" Dpi="254" Font="DejaVu Sans Mono, 5pt" ForeColor="255,90,90,90" TextAlignment="TopRight">
           <ExpressionBindings>
             <Item1 Ref="23" EventName="BeforePrint" PropertyName="Text" Expression="'CUFE: ' + [Documento.Cufe]" />
             <Item2 Ref="24" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.Cufe]) &gt; 0" />

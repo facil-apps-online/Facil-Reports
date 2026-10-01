@@ -17,19 +17,19 @@
           </ExpressionBindings>
           <StylePriority Ref="9" UseFont="false" />
         </Item2>
-        <Item3 Ref="10" ControlType="XRLabel" Name="lblDocTitle" TextAlignment="TopRight" SizeF="1000,35" LocationFloat="959,0" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold">
+        <Item3 Ref="10" ControlType="XRLabel" Name="lblDocTitle" TextAlignment="TopRight" SizeF="1000,70" LocationFloat="959,0" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold">
           <ExpressionBindings>
             <Item1 Ref="11" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.DocumentoTipo]" />
           </ExpressionBindings>
           <StylePriority Ref="12" UseFont="false" UseTextAlignment="false" />
         </Item3>
-        <Item4 Ref="13" ControlType="XRLabel" Name="lblDocNumber" TextAlignment="TopRight" SizeF="1000,50" LocationFloat="959,35" Dpi="254" Font="DejaVu Sans Mono, 12pt, style=Bold" ForeColor="255,36,85,201">
+        <Item4 Ref="13" ControlType="XRLabel" Name="lblDocNumber" TextAlignment="TopRight" SizeF="1000,50" LocationFloat="959,70" Dpi="254" Font="DejaVu Sans Mono, 12pt, style=Bold" ForeColor="255,36,85,201">
           <ExpressionBindings>
             <Item1 Ref="14" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.DocumentoNumero]" />
           </ExpressionBindings>
           <StylePriority Ref="15" UseFont="false" UseForeColor="false" UseTextAlignment="false" />
         </Item4>
-        <Item5 Ref="16" ControlType="XRLabel" Name="lblPeriodo" TextAlignment="TopRight" SizeF="1000,60" LocationFloat="959,90" Dpi="254" Font="DejaVu Sans, 6.5pt" ForeColor="Gray">
+        <Item5 Ref="16" ControlType="XRLabel" Name="lblPeriodo" TextAlignment="TopRight" SizeF="1000,35" LocationFloat="959,122" Dpi="254" Font="DejaVu Sans, 6.5pt" ForeColor="Gray">
           <ExpressionBindings>
             <Item1 Ref="17" EventName="BeforePrint" PropertyName="Text" Expression="'Período: ' + [Documento.PeriodoTexto]" />
           </ExpressionBindings>

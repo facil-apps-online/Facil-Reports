@@ -116,8 +116,9 @@ def build(size, qr_top):
     ph_controls += [title, number, resol]
     if qr_top:
         qr = mk(ctl, "picQr", "picQr", 1759, 0, 200, 200); expr(qr, "Visible", HAS_QR)
-        cufe = mk(ctl, "lblLegal", "lblCufeTop", 859, 205, 1100, 45,
-                  Font="DejaVu Sans Mono, 5.5pt", TextAlignment="TopRight", Multiline="true")
+        # el CUFE real tiene 96 caracteres: 5pt en una caja de 125 mm cabe en una sola línea
+        cufe = mk(ctl, "lblLegal", "lblCufeTop", 709, 205, 1250, 45,
+                  Font="DejaVu Sans Mono, 5pt", TextAlignment="TopRight", Multiline="true")
         expr(cufe, "Text", "'CUFE: ' + [Documento.Cufe]")
         expr(cufe, "Visible", "Len([Documento.Cufe]) > 0")
         ph_controls += [qr, cufe]
