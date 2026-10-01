@@ -26,6 +26,7 @@ builder.Services.AddSingleton<ApiKeyGenerator>();
 builder.Services.AddScoped<GoogleDriveService>();
 builder.Services.AddScoped<ReportGenerator>();
 builder.Services.AddTransient<RepxToFastReportConverter>();
+builder.Services.AddSingleton<GhostscriptPdfOptimizer>();
 builder.Services.AddScoped<FastReportGenerator>();
 
 // DevExpress Web Report Designer — el mismo motor que ya usa ReportGenerator para exportar PDF,

@@ -1,0 +1,80 @@
+{
+ "Documento": {
+  "EmisorLogoUrl": "https://TU-DOMINIO/logo.png",
+  "EmisorRazonSocial": "Comercializadora Ejemplo S.A.S.",
+  "EmisorNombreComercial": "Ejemplo Store",
+  "EmisorNit": "900303194",
+  "EmisorDv": "6",
+  "EmisorDireccion": "Calle 93 # 15-20, Oficina 501",
+  "EmisorCiudad": "Bogotá D.C.",
+  "EmisorTelefono": "+57 601 555 0199",
+  "EmisorEmail": "facturacion@ejemplo-sas.com.co",
+  "EmisorCalidadTributaria": "Responsable de IVA",
+  "FechaGeneracion": "24/09/2026 10:15:00",
+  "MedioPago": "Transferencia bancaria",
+  "FabricanteSoftwareNombre": "SoFactory S.A.S.",
+  "FabricanteSoftwareNit": "900.303.194-6",
+  "NombreSoftware": "Facil Factura",
+  "ProveedorTecnologicoNombre": null,
+  "ProveedorTecnologicoNit": null,
+  "EmisorActividadEconomica": "‹EmisorActividadEconomica›",
+  "EmisorAgenteRetenedorIva": "‹EmisorAgenteRetenedorIva›",
+  "EmisorAutorretenedorRenta": "‹EmisorAutorretenedorRenta›",
+  "EmisorGranContribuyente": "‹EmisorGranContribuyente›",
+  "EmpleadoNombre": "María Fernanda Rodríguez Gómez",
+  "EmpleadoTipoIdentificacion": "CC",
+  "EmpleadoIdentificacion": "52.874.113",
+  "EmpleadoDireccion": "Carrera 15 # 85-30 Apto 402",
+  "EmpleadoCiudad": "Bogotá D.C.",
+  "DocumentoTipo": "NÓMINA ELECTRÓNICA",
+  "DocumentoNumero": "NE 120",
+  "PeriodoTexto": "01/09/2026 al 30/09/2026",
+  "FechaPago": "30/09/2026",
+  "NotaReferencia": "",
+  "Cune": "c3a1e9d0f2b84a6d9e7c5b3a1f0e8d6c4b2a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3",
+  "QrImageUrl": "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=NumNIE%3A%20NE%20120%0AFecNIE%3A%202026-09-30%0ANitNIE%3A%20900303194%0ADocEmp%3A%201032456789%0AValDev%3A%203500000.00%0AValDed%3A%20280000.00%0AValTol%3A%203220000.00%0ACUNE%3A%20c3a1e9d0f2b84a6d9e7c5b3a1f0e8d6c4b2a09f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3",
+  "TotalDevengado": "3.500.000",
+  "TotalDeduccion": "280.000",
+  "NetoPagar": "3.220.000",
+  "NetoPagarEnLetras": "TRES MILLONES DOSCIENTOS VEINTE MIL PESOS M/CTE"
+ },
+ "Devengos": [
+  {
+   "Codigo": "SAL",
+   "Descripcion": "Sueldo básico",
+   "Valor": "3.000.000"
+  },
+  {
+   "Codigo": "AUX",
+   "Descripcion": "Auxilio de transporte",
+   "Valor": "162.000"
+  },
+  {
+   "Codigo": "HEO",
+   "Descripcion": "Horas extras ordinarias diurnas (8 horas) correspondientes al período de liquidación",
+   "Valor": "250.000"
+  },
+  {
+   "Codigo": "BON",
+   "Descripcion": "Bonificación no salarial",
+   "Valor": "88.000"
+  }
+ ],
+ "Deducciones": [
+  {
+   "Codigo": "SAL",
+   "Descripcion": "Aporte a salud (4%)",
+   "Valor": "120.000"
+  },
+  {
+   "Codigo": "PEN",
+   "Descripcion": "Aporte a pensión (4%)",
+   "Valor": "120.000"
+  },
+  {
+   "Codigo": "FSP",
+   "Descripcion": "Fondo de solidaridad pensional",
+   "Valor": "40.000"
+  }
+ ]
+}

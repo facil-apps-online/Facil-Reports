@@ -30,7 +30,10 @@ WORKDIR /app
 # curl para el healthcheck. libgdiplus: DevExpress 22.1 (System.Drawing.Common por debajo, no el
 # renderizador propio que trajeron versiones posteriores) lo necesita para dibujar en Linux — sin
 # esto falla con "Unable to load shared library 'libgdiplus'" al exportar el primer PDF.
-RUN apt-get update && apt-get install -y --no-install-recommends curl libgdiplus \
+# ghostscript: recorta las fuentes embebidas del PDF vectorial (de ~1 MB a ~150 KB por factura).
+# fonts-liberation (equivale a Arial) y fonts-dejavu-core (DejaVu Sans / Sans Mono): las plantillas
+# estándar usan esas tipografías y el contenedor no trae ninguna.
+RUN apt-get update && apt-get install -y --no-install-recommends curl libgdiplus ghostscript fontconfig fonts-liberation fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app/publish .

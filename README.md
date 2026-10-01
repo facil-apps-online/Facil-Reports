@@ -53,6 +53,27 @@ El API estará disponible en `http://localhost:5000`
 curl http://localhost:5000/health
 ```
 
+## Motores de impresión
+
+`POST /api/reports/generate` imprime con uno de dos motores, elegido por configuración:
+
+| `Rendering:Engine` | Motor |
+|---|---|
+| `FastReport` (por defecto) | Convierte el `.repx` en memoria (`RepxToFastReportConverter`), FastReport calcula bandas y paginación y `SkiaPdfExport` dibuja un **PDF vectorial** (texto real, fuentes embebidas, QR vectorial generado localmente). Ghostscript recorta las fuentes (~150 KB por factura). |
+| `DevExpress` | El motor original (`ReportGenerator`). Se conserva intacto: se puede volver a él cambiando solo la configuración. |
+
+- Una petición puede forzar su motor con el campo opcional `"engine": "fastreport" | "devexpress"` (sirve para comparar).
+- `Rendering:FallbackToDevExpress` (por defecto `false`): si FastReport no soporta un control o banda de la
+  plantilla, responde **422** con el nombre de la plantilla y del control, en vez de imprimir algo distinto.
+  Con `true` cae a DevExpress.
+- `Rendering:CompressPdf` (por defecto `true`) y `Rendering:GhostscriptPath` (por defecto `gs`).
+- El servidor registra una advertencia cuando una plantilla tiene textos que se montan entre sí o líneas que
+  cruzan texto (útil cuando un cliente duplica y mueve controles).
+- El logo (`ImageUrl` http/https) se descarga solo desde destinos públicos (sin redirecciones ni IPs privadas),
+  con tope de 5 MB y 10 s.
+
+Plantillas estándar y generador: `templates/estandar/` y `tools/`.
+
 ## Deploy en Producción
 
 Flujo híbrido: **GIT** para el repositorio del proyecto (GitHub), **SCP** para transferir código al servidor.

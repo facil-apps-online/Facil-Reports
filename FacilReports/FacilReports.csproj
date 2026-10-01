@@ -9,6 +9,12 @@
   <ItemGroup>
     <PackageReference Include="FastReport.OpenSource" Version="2026.2.8" />
     <PackageReference Include="FastReport.OpenSource.Export.PdfSimple" Version="2026.2.8" />
+    <!-- Exportador PDF vectorial propio (SkiaPdfExport): texto real, fuentes embebidas y QR vectorial.
+         3.x: el PDF de 2.88 no recortaba fuentes. NoDependencies: sin requerir fontconfig/freetype del sistema. -->
+    <PackageReference Include="SkiaSharp" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.116.1" />
+    <!-- Generación local del código QR (antes se llamaba a api.qrserver.com). MIT. -->
+    <PackageReference Include="QRCoder" Version="1.4.3" />
     <!-- Version fijada a lo que cubre nuestra licencia actual (suscripción v22) — ver
          devexpress-support-reply-2.txt. DevExpress.Drawing.Skia no existe en esta serie; el
          paquete DevExpress.Drawing (dependencia transitiva de AspNetCore.Reporting) trae su
