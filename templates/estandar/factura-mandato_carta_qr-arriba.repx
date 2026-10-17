@@ -346,7 +346,7 @@
         <Item6 Ref="158" ControlType="XRLabel" Name="lblTotalK" Text="TOTAL" SizeF="300,50" LocationFloat="1359,248" Dpi="254" Font="DejaVu Sans, 9pt, style=Bold">
           <StylePriority Ref="159" UseFont="false" />
         </Item6>
-        <Item7 Ref="160" ControlType="XRLabel" Name="lblTotalV" TextAlignment="MiddleRight" SizeF="300,50" LocationFloat="1659,248" Dpi="254" Font="DejaVu Sans Mono, 12pt, style=Bold" ForeColor="255,36,85,201">
+        <Item7 Ref="160" ControlType="XRLabel" Name="lblTotalV" TextAlignment="MiddleRight" SizeF="460,50" LocationFloat="1499,248" Dpi="254" Font="DejaVu Sans Mono, 12pt, style=Bold" ForeColor="255,36,85,201">
           <ExpressionBindings>
             <Item1 Ref="161" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.Total]" />
           </ExpressionBindings>

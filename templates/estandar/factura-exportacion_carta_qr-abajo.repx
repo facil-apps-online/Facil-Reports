@@ -323,7 +323,7 @@
         <Item6 Ref="151" ControlType="XRLabel" Name="lblTotalK" Text="TOTAL" SizeF="300,50" LocationFloat="1359,248" Dpi="254" Font="DejaVu Sans, 9pt, style=Bold">
           <StylePriority Ref="152" UseFont="false" />
         </Item6>
-        <Item7 Ref="153" ControlType="XRLabel" Name="lblTotalV" TextAlignment="MiddleRight" SizeF="300,50" LocationFloat="1659,248" Dpi="254" Font="DejaVu Sans Mono, 12pt, style=Bold" ForeColor="255,36,85,201">
+        <Item7 Ref="153" ControlType="XRLabel" Name="lblTotalV" TextAlignment="MiddleRight" SizeF="460,50" LocationFloat="1499,248" Dpi="254" Font="DejaVu Sans Mono, 12pt, style=Bold" ForeColor="255,36,85,201">
           <ExpressionBindings>
             <Item1 Ref="154" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.Total] + Iif(Len([Documento.Trm]) &gt; 0, ' ' + [Documento.Moneda], '')" />
           </ExpressionBindings>
