@@ -111,7 +111,7 @@
         </Item10>
         <Item11 Ref="57" ControlType="XRLabel" Name="lblAdqInfo" Multiline="true" SizeF="950,150" LocationFloat="1009,205" Dpi="254" Font="DejaVu Sans, 8pt" ForeColor="255,90,90,90">
           <ExpressionBindings>
-            <Item1 Ref="58" EventName="BeforePrint" PropertyName="Text" Expression="'NIT/CC ' + [Documento.AdquirenteIdentificacion] + '&#10;' + [Documento.AdquirenteDireccion] + ', ' + [Documento.AdquirenteCiudad] + '&#10;' + [Documento.AdquirenteTelefono] + ' · ' + [Documento.AdquirenteEmail]" />
+            <Item1 Ref="58" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.AdquirenteDocumento] + '&#10;' + [Documento.AdquirenteDireccion] + ', ' + [Documento.AdquirenteCiudad] + '&#10;' + [Documento.AdquirenteTelefono] + ' · ' + [Documento.AdquirenteEmail]" />
           </ExpressionBindings>
           <StylePriority Ref="59" UseFont="false" UseForeColor="false" />
         </Item11>
