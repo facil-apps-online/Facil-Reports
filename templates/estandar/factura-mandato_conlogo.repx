@@ -1,0 +1,427 @@
+<?xml version='1.0' encoding='utf-8'?>
+<XtraReportsLayoutSerializer SerializerVersion="22.1.15.0" Ref="0" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v22.1, Version=22.1.15.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Factura_ConLogo" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Margins="100, 100, 100, 100" PaperKind="Custom" PageWidth="2159" PageHeight="2794" Version="22.1" Dpi="254">
+  <Bands>
+    <Item1 Ref="1" ControlType="TopMarginBand" Name="TopMargin" Dpi="254" />
+    <Item2 Ref="2" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="620" Dpi="254">
+      <Controls>
+        <Item1 Ref="3" ControlType="XRLine" Name="line1" SizeF="1959,10" LocationFloat="0,104.061" Dpi="254" ForeColor="255,36,85,201">
+          <StylePriority Ref="4" UseForeColor="false" />
+        </Item1>
+        <Item2 Ref="5" ControlType="XRLabel" Name="lblActividadEconomica" SizeF="1300,24" LocationFloat="0,0" Dpi="254" Font="DejaVu Sans, 6.5pt" ForeColor="Gray">
+          <ExpressionBindings>
+            <Item1 Ref="6" EventName="BeforePrint" PropertyName="Text" Expression="'Actividad Económica Principal: ' + [Documento.EmisorActividadEconomica] + Iif([Documento.EmisorRegimenRenta] = '', '', '   ·   Renta: ' + [Documento.EmisorRegimenRenta])" />
+          </ExpressionBindings>
+          <StylePriority Ref="7" UseFont="false" UseForeColor="false" />
+        </Item2>
+        <Item3 Ref="8" ControlType="XRLabel" Name="lblGranContribuyente" SizeF="1300,24" LocationFloat="0,25.415" Dpi="254" Font="DejaVu Sans, 6.5pt" ForeColor="Gray">
+          <ExpressionBindings>
+            <Item1 Ref="9" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.EmisorGranContribuyente]" />
+          </ExpressionBindings>
+          <StylePriority Ref="10" UseFont="false" UseForeColor="false" />
+        </Item3>
+        <Item4 Ref="11" ControlType="XRLabel" Name="lblAgenteRetenedorIva" SizeF="1300,24" LocationFloat="0,51.418" Dpi="254" Font="DejaVu Sans, 6.5pt" ForeColor="Gray">
+          <ExpressionBindings>
+            <Item1 Ref="12" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.EmisorAgenteRetenedorIva]" />
+          </ExpressionBindings>
+          <StylePriority Ref="13" UseFont="false" UseForeColor="false" />
+        </Item4>
+        <Item5 Ref="14" ControlType="XRLabel" Name="lblAutorretenedorRenta" SizeF="1300,24" LocationFloat="0,77.415" Dpi="254" Font="DejaVu Sans, 6.5pt" ForeColor="Gray">
+          <ExpressionBindings>
+            <Item1 Ref="15" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.EmisorAutorretenedorRenta]" />
+          </ExpressionBindings>
+          <StylePriority Ref="16" UseFont="false" UseForeColor="false" />
+        </Item5>
+        <Item6 Ref="17" ControlType="XRLabel" Name="lblEmisorH" Text="EMISOR" SizeF="950,30" LocationFloat="0,114.418" Dpi="254" Font="DejaVu Sans, 7pt, style=Bold" ForeColor="Gray">
+          <StylePriority Ref="18" UseFont="false" UseForeColor="false" />
+        </Item6>
+        <Item7 Ref="19" ControlType="XRLabel" Name="lblEmisorNombre" SizeF="950,45" LocationFloat="0,146.415" Dpi="254" Font="DejaVu Sans, 10pt, style=Bold">
+          <ExpressionBindings>
+            <Item1 Ref="20" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.EmisorRazonSocial]" />
+          </ExpressionBindings>
+          <StylePriority Ref="21" UseFont="false" />
+        </Item7>
+        <Item8 Ref="22" ControlType="XRLabel" Name="lblEmisorInfo" Multiline="true" SizeF="950,150" LocationFloat="0,194.418" Dpi="254" Font="DejaVu Sans, 8pt" ForeColor="255,90,90,90">
+          <ExpressionBindings>
+            <Item1 Ref="23" EventName="BeforePrint" PropertyName="Text" Expression="'NIT ' + [Documento.EmisorNit] + '&#10;' + [Documento.EmisorDireccion] + ', ' + [Documento.EmisorCiudad] + '&#10;' + [Documento.EmisorTelefono] + ' · ' + [Documento.EmisorEmail]" />
+          </ExpressionBindings>
+          <StylePriority Ref="24" UseFont="false" UseForeColor="false" />
+        </Item8>
+        <Item9 Ref="25" ControlType="XRLabel" Name="lblAdqH" Text="ADQUIRENTE" SizeF="950,30" LocationFloat="1009,114.418" Dpi="254" Font="DejaVu Sans, 7pt, style=Bold" ForeColor="Gray">
+          <StylePriority Ref="26" UseFont="false" UseForeColor="false" />
+        </Item9>
+        <Item10 Ref="27" ControlType="XRLabel" Name="lblAdqNombre" SizeF="950,45" LocationFloat="1009,146.415" Dpi="254" Font="DejaVu Sans, 10pt, style=Bold">
+          <ExpressionBindings>
+            <Item1 Ref="28" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.AdquirenteNombre]" />
+          </ExpressionBindings>
+          <StylePriority Ref="29" UseFont="false" />
+        </Item10>
+        <Item11 Ref="30" ControlType="XRLabel" Name="lblAdqInfo" Multiline="true" SizeF="950,150" LocationFloat="1009,194.418" Dpi="254" Font="DejaVu Sans, 8pt" ForeColor="255,90,90,90">
+          <ExpressionBindings>
+            <Item1 Ref="31" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.AdquirenteDocumento] + '&#10;' + [Documento.AdquirenteDireccion] + ', ' + [Documento.AdquirenteCiudad] + '&#10;' + [Documento.AdquirenteTelefono] + ' · ' + [Documento.AdquirenteEmail]" />
+          </ExpressionBindings>
+          <StylePriority Ref="32" UseFont="false" UseForeColor="false" />
+        </Item11>
+        <Item12 Ref="33" ControlType="XRPanel" Name="pnlMeta" SizeF="1959,160" LocationFloat="0,372.063" Dpi="254" BackColor="255,244,245,247">
+          <Controls>
+            <Item1 Ref="34" ControlType="XRLabel" Name="lblMeta1k" Text="Fecha y hora de generación" SizeF="420,25" LocationFloat="10,10" Dpi="254" Font="DejaVu Sans, 6.5pt, style=Bold" ForeColor="Gray">
+              <StylePriority Ref="35" UseFont="false" UseForeColor="false" />
+            </Item1>
+            <Item2 Ref="36" ControlType="XRLabel" Name="lblMeta1v" SizeF="420,30" LocationFloat="10,35" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold">
+              <ExpressionBindings>
+                <Item1 Ref="37" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.FechaGeneracion]" />
+              </ExpressionBindings>
+              <StylePriority Ref="38" UseFont="false" />
+            </Item2>
+            <Item3 Ref="39" ControlType="XRLabel" Name="lblMeta2k" Text="Fecha de vencimiento" SizeF="310,25" LocationFloat="440,10" Dpi="254" Font="DejaVu Sans, 6.5pt, style=Bold" ForeColor="Gray">
+              <StylePriority Ref="40" UseFont="false" UseForeColor="false" />
+            </Item3>
+            <Item4 Ref="41" ControlType="XRLabel" Name="lblMeta2v" SizeF="310,30" LocationFloat="440,35" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold">
+              <ExpressionBindings>
+                <Item1 Ref="42" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.FechaVencimiento]" />
+              </ExpressionBindings>
+              <StylePriority Ref="43" UseFont="false" />
+            </Item4>
+            <Item5 Ref="44" ControlType="XRLabel" Name="lblMeta3k" Text="Forma de pago" SizeF="230,25" LocationFloat="760,10" Dpi="254" Font="DejaVu Sans, 6.5pt, style=Bold" ForeColor="Gray">
+              <StylePriority Ref="45" UseFont="false" UseForeColor="false" />
+            </Item5>
+            <Item6 Ref="46" ControlType="XRLabel" Name="lblMeta3v" SizeF="230,30" LocationFloat="760,35" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold">
+              <ExpressionBindings>
+                <Item1 Ref="47" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.FormaPago]" />
+              </ExpressionBindings>
+              <StylePriority Ref="48" UseFont="false" />
+            </Item6>
+            <Item7 Ref="49" ControlType="XRLabel" Name="lblMeta4k" Text="Medio de pago" SizeF="300,25" LocationFloat="1000,10" Dpi="254" Font="DejaVu Sans, 6.5pt, style=Bold" ForeColor="Gray">
+              <StylePriority Ref="50" UseFont="false" UseForeColor="false" />
+            </Item7>
+            <Item8 Ref="51" ControlType="XRLabel" Name="lblMeta4v" SizeF="300,30" LocationFloat="1000,35" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold">
+              <ExpressionBindings>
+                <Item1 Ref="52" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.MedioPago]" />
+              </ExpressionBindings>
+              <StylePriority Ref="53" UseFont="false" />
+            </Item8>
+            <Item9 Ref="54" ControlType="XRLabel" Name="lblMeta5k" Text="Orden de compra" SizeF="250,25" LocationFloat="1310,10" Dpi="254" Font="DejaVu Sans, 6.5pt, style=Bold" ForeColor="Gray">
+              <StylePriority Ref="55" UseFont="false" UseForeColor="false" />
+            </Item9>
+            <Item10 Ref="56" ControlType="XRLabel" Name="lblMeta5v" SizeF="250,30" LocationFloat="1310,35" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold">
+              <ExpressionBindings>
+                <Item1 Ref="57" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.OrdenCompra]" />
+              </ExpressionBindings>
+              <StylePriority Ref="58" UseFont="false" />
+            </Item10>
+            <Item11 Ref="59" ControlType="XRLabel" Name="lblNotaRef" SizeF="1939,40" LocationFloat="10,72" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold" ForeColor="255,180,95,6">
+              <ExpressionBindings>
+                <Item1 Ref="60" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.NotaReferencia]" />
+                <Item2 Ref="61" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.NotaReferencia]) &gt; 0" />
+              </ExpressionBindings>
+              <StylePriority Ref="62" UseFont="false" UseForeColor="false" />
+            </Item11>
+            <Item12 Ref="1200" ControlType="XRLabel" Name="lblMeta6k" Text="Moneda" SizeF="380,25" LocationFloat="1570,10" Dpi="254" Font="DejaVu Sans, 6.5pt, style=Bold" ForeColor="Gray">
+              <ExpressionBindings>
+                <Item1 Ref="1201" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.Trm]) &gt; 0" />
+              </ExpressionBindings>
+              <StylePriority Ref="1202" UseFont="false" UseForeColor="false" />
+            </Item12>
+            <Item13 Ref="1203" ControlType="XRLabel" Name="lblMeta6v" SizeF="380,30" LocationFloat="1570,35" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold">
+              <ExpressionBindings>
+                <Item1 Ref="1204" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.MonedaTexto]" />
+                <Item2 Ref="1205" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.Trm]) &gt; 0" />
+              </ExpressionBindings>
+              <StylePriority Ref="1206" UseFont="false" />
+            </Item13>
+            <Item14 Ref="1208" ControlType="XRLabel" Name="lblTipoOperacion" SizeF="700,40" LocationFloat="10,72" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold">
+              <ExpressionBindings>
+                <Item1 Ref="1209" EventName="BeforePrint" PropertyName="Text" Expression="'Tipo de operación: ' + [Documento.TipoOperacion]" />
+                <Item2 Ref="1210" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.TipoOperacion]) &gt; 0 And Len([Documento.NotaReferencia]) = 0" />
+              </ExpressionBindings>
+              <StylePriority Ref="1211" UseFont="false" />
+            </Item14>
+          </Controls>
+          <StylePriority Ref="63" UseBackColor="false" />
+        </Item12>
+        <Item13 Ref="64" ControlType="XRTable" Name="tblItemsHeader" TextAlignment="MiddleLeft" SizeF="1959,60" LocationFloat="0,552.063" Dpi="254">
+          <Rows>
+            <Item1 Ref="65" ControlType="XRTableRow" Name="rowItemsHeader" Weight="1" Dpi="254">
+              <Cells>
+                <Item1 Ref="66" ControlType="XRTableCell" Name="cellH0" Weight="0.35" Text="No" TextAlignment="MiddleCenter" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold" BackColor="255,244,245,247">
+                  <StylePriority Ref="67" UseFont="false" UseBackColor="false" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="68" ControlType="XRTableCell" Name="cellH1" Weight="2.6" Text="Código / Descripción" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold" BackColor="255,244,245,247">
+                  <StylePriority Ref="69" UseFont="false" UseBackColor="false" />
+                </Item2>
+                <Item3 Ref="70" ControlType="XRTableCell" Name="cellH2" Weight="0.3718966054109239" Text="Cant." TextAlignment="MiddleCenter" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold" BackColor="255,244,245,247">
+                  <StylePriority Ref="71" UseFont="false" UseBackColor="false" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="72" ControlType="XRTableCell" Name="cellH3" Weight="0.44691441562713263" Text="Unidad" TextAlignment="MiddleCenter" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold" BackColor="255,244,245,247" Padding="20,5,0,0,254">
+                  <StylePriority Ref="73" UseFont="false" UseBackColor="false" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="74" ControlType="XRTableCell" Name="cellH4" Weight="0.9351664105798765" Text="Valor Unit." TextAlignment="MiddleRight" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold" BackColor="255,244,245,247">
+                  <StylePriority Ref="75" UseFont="false" UseBackColor="false" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="76" ControlType="XRTableCell" Name="cellH5" Weight="0.4115383072415936" Text="IVA" TextAlignment="MiddleCenter" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold" BackColor="255,244,245,247">
+                  <StylePriority Ref="77" UseFont="false" UseBackColor="false" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="78" ControlType="XRTableCell" Name="tableCell1" Weight="0.5142323149682276" Multiline="true" Text="Desc" TextAlignment="MiddleCenter" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold" BackColor="255,244,245,247">
+                  <StylePriority Ref="79" UseFont="false" UseBackColor="false" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="80" ControlType="XRTableCell" Name="cellH6" Weight="1.2202506240475586" Text="Total" TextAlignment="MiddleRight" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold" BackColor="255,244,245,247">
+                  <StylePriority Ref="81" UseFont="false" UseBackColor="false" UseTextAlignment="false" />
+                </Item8>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="82" UseTextAlignment="false" />
+        </Item13>
+      </Controls>
+    </Item2>
+    <Item3 Ref="83" ControlType="PageHeaderBand" Name="PageHeader" HeightF="230" Dpi="254">
+      <Controls>
+        <Item1 Ref="84" ControlType="XRPictureBox" Name="picLogo" Sizing="ZoomImage" SizeF="513,220" LocationFloat="0,0" Dpi="254">
+          <ExpressionBindings>
+            <Item1 Ref="85" EventName="BeforePrint" PropertyName="ImageUrl" Expression="[Documento.EmisorLogoUrl]" />
+            <Item2 Ref="86" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.EmisorLogoUrl]) &gt; 0" />
+          </ExpressionBindings>
+        </Item1>
+        <Item2 Ref="87" ControlType="XRLabel" Name="lblBrandName" Multiline="true" SizeF="1000,110" LocationFloat="0,0" Dpi="254" Font="DejaVu Sans, 13pt, style=Bold">
+          <ExpressionBindings>
+            <Item1 Ref="88" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.EmisorRazonSocial]" />
+            <Item2 Ref="89" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.EmisorLogoUrl]) = 0" />
+          </ExpressionBindings>
+          <StylePriority Ref="90" UseFont="false" />
+        </Item2>
+        <Item3 Ref="91" ControlType="XRLabel" Name="lblDocTitle" TextAlignment="TopRight" SizeF="958.995,45" LocationFloat="1000,0" Dpi="254" Font="DejaVu Sans, 9pt, style=Bold">
+          <ExpressionBindings>
+            <Item1 Ref="92" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.DocumentoTipo]" />
+          </ExpressionBindings>
+          <StylePriority Ref="93" UseFont="false" UseTextAlignment="false" />
+        </Item3>
+        <Item4 Ref="94" ControlType="XRLabel" Name="lblDocNumber" TextAlignment="TopRight" SizeF="958.995,65" LocationFloat="1000,45" Dpi="254" Font="DejaVu Sans Mono, 14pt, style=Bold" ForeColor="255,36,85,201">
+          <ExpressionBindings>
+            <Item1 Ref="95" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.DocumentoNumero]" />
+          </ExpressionBindings>
+          <StylePriority Ref="96" UseFont="false" UseForeColor="false" UseTextAlignment="false" />
+        </Item4>
+        <Item5 Ref="97" ControlType="XRLabel" Name="lblResolucion" TextAlignment="TopRight" SizeF="841.187,80" LocationFloat="1113.757,115" Dpi="254" Font="DejaVu Sans, 7pt" ForeColor="Gray">
+          <ExpressionBindings>
+            <Item1 Ref="98" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.ResolucionTexto]" />
+          </ExpressionBindings>
+          <StylePriority Ref="99" UseFont="false" UseForeColor="false" UseTextAlignment="false" />
+        </Item5>
+      </Controls>
+    </Item3>
+    <Item4 Ref="100" ControlType="DetailBand" Name="Detail" HeightF="0" Dpi="254" />
+    <Item5 Ref="101" ControlType="DetailReportBand" Name="DetailReportItems" Level="0" DataMember="Items" Dpi="254">
+      <Bands>
+        <Item1 Ref="102" ControlType="DetailBand" Name="DetailItems" FillEmptySpace="true" HeightF="55" Dpi="254">
+          <Controls>
+            <Item1 Ref="103" ControlType="XRTable" Name="tblItemRow" TextAlignment="MiddleLeft" SizeF="1959,55" LocationFloat="0,0" Dpi="254">
+              <Rows>
+                <Item1 Ref="104" ControlType="XRTableRow" Name="rowItem" Weight="1" Dpi="254">
+                  <Cells>
+                    <Item1 Ref="105" ControlType="XRTableCell" Name="cellD0" Weight="0.35" TextAlignment="MiddleCenter" Dpi="254" Font="DejaVu Sans, 8pt">
+                      <ExpressionBindings>
+                        <Item1 Ref="106" EventName="BeforePrint" PropertyName="Text" Expression="[Ordinal]" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="107" UseFont="false" UseTextAlignment="false" />
+                    </Item1>
+                    <Item2 Ref="108" ControlType="XRTableCell" Name="cellD1" Weight="2.6" Multiline="true" Dpi="254" Font="DejaVu Sans, 8pt">
+                      <ExpressionBindings>
+                        <Item1 Ref="109" EventName="BeforePrint" PropertyName="Text" Expression="[Codigo] + ' — ' + [Nombre] + Iif(Len([MandanteTexto]) &gt; 0, '&#10;' + [MandanteTexto] + Iif(Len([MandanteNombre]) &gt; 0, ' — ' + [MandanteNombre], ''), '')" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="110" UseFont="false" />
+                    </Item2>
+                    <Item3 Ref="111" ControlType="XRTableCell" Name="cellD2" Weight="0.3718966054109239" TextAlignment="MiddleCenter" Dpi="254" Font="DejaVu Sans, 8pt">
+                      <ExpressionBindings>
+                        <Item1 Ref="112" EventName="BeforePrint" PropertyName="Text" Expression="[Cantidad]" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="113" UseFont="false" UseTextAlignment="false" />
+                    </Item3>
+                    <Item4 Ref="114" ControlType="XRTableCell" Name="cellD3" Weight="0.44691441562713263" TextAlignment="MiddleCenter" Dpi="254" Font="DejaVu Sans, 8pt" Padding="20,5,0,0,254">
+                      <ExpressionBindings>
+                        <Item1 Ref="115" EventName="BeforePrint" PropertyName="Text" Expression="[Unidad]" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="116" UseFont="false" UseTextAlignment="false" />
+                    </Item4>
+                    <Item5 Ref="117" ControlType="XRTableCell" Name="cellD4" Weight="0.9351664105798765" TextAlignment="MiddleRight" Dpi="254" Font="DejaVu Sans, 8pt">
+                      <ExpressionBindings>
+                        <Item1 Ref="118" EventName="BeforePrint" PropertyName="Text" Expression="[ValorUnitario]" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="119" UseFont="false" UseTextAlignment="false" />
+                    </Item5>
+                    <Item6 Ref="120" ControlType="XRTableCell" Name="cellD5" Weight="0.4115384472652004" TextAlignment="MiddleCenter" Dpi="254" Font="DejaVu Sans, 8pt">
+                      <ExpressionBindings>
+                        <Item1 Ref="121" EventName="BeforePrint" PropertyName="Text" Expression="[PorcentajeIva]" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="122" UseFont="false" UseTextAlignment="false" />
+                    </Item6>
+                    <Item7 Ref="123" ControlType="XRTableCell" Name="tableCell2" Weight="0.5087776665966699" Multiline="true" Text="tableCell2" TextAlignment="MiddleCenter" Dpi="254" Font="DejaVu Sans, 8pt">
+                      <ExpressionBindings>
+                        <Item1 Ref="124" EventName="BeforePrint" PropertyName="Text" Expression="[PorcentajeDescuento]" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="125" UseFont="false" UseTextAlignment="false" />
+                    </Item7>
+                    <Item8 Ref="126" ControlType="XRTableCell" Name="cellD6" Weight="1.2257057772447155" TextAlignment="MiddleRight" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold">
+                      <ExpressionBindings>
+                        <Item1 Ref="127" EventName="BeforePrint" PropertyName="Text" Expression="[TotalLinea]" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="128" UseFont="false" UseTextAlignment="false" />
+                    </Item8>
+                  </Cells>
+                </Item1>
+              </Rows>
+              <StylePriority Ref="129" UseTextAlignment="false" />
+            </Item1>
+          </Controls>
+        </Item1>
+      </Bands>
+    </Item5>
+    <Item6 Ref="1212" ControlType="DetailReportBand" Name="DetailReportObservaciones" Level="1" DataMember="Observaciones" Dpi="254">
+      <Bands>
+        <Item1 Ref="1213" ControlType="ReportHeaderBand" Name="HeaderObservaciones" HeightF="60" Dpi="254">
+          <Controls>
+            <Item1 Ref="1214" ControlType="XRLabel" Name="lblObsTitulo" Text="Observaciones" SizeF="1959,40" LocationFloat="0,20" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold" ForeColor="255,90,90,90">
+              <StylePriority Ref="1215" UseFont="false" UseForeColor="false" />
+            </Item1>
+          </Controls>
+        </Item1>
+        <Item2 Ref="1216" ControlType="DetailBand" Name="DetailObservaciones" HeightF="40" Dpi="254">
+          <Controls>
+            <Item1 Ref="1217" ControlType="XRLabel" Name="lblObsTexto" Multiline="true" CanGrow="true" SizeF="1959,40" LocationFloat="0,0" Dpi="254" Font="DejaVu Sans, 7.5pt" ForeColor="255,90,90,90">
+              <ExpressionBindings>
+                <Item1 Ref="1218" EventName="BeforePrint" PropertyName="Text" Expression="[Texto]" />
+              </ExpressionBindings>
+              <StylePriority Ref="1219" UseFont="false" UseForeColor="false" />
+            </Item1>
+          </Controls>
+        </Item2>
+      </Bands>
+    </Item6>
+    <Item7 Ref="130" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="700" KeepTogether="true" Dpi="254">
+      <Controls>
+        <Item1 Ref="135" ControlType="XRLine" Name="lineTotals" SizeF="1959,10" LocationFloat="0,0" Dpi="254" ForeColor="255,200,200,200">
+          <StylePriority Ref="136" UseForeColor="false" />
+        </Item1>
+        <Item2 Ref="137" ControlType="XRLabel" Name="lblSubtotalK" Text="Subtotal" SizeF="200.686,30" LocationFloat="1291.003,20" Dpi="254" Font="DejaVu Sans, 8pt" ForeColor="Gray">
+          <StylePriority Ref="138" UseFont="false" UseForeColor="false" />
+        </Item2>
+        <Item3 Ref="139" ControlType="XRLabel" Name="lblSubtotalV" TextAlignment="MiddleRight" SizeF="456.639,30" LocationFloat="1497.03,20" Dpi="254" Font="DejaVu Sans, 8pt, style=Bold">
+          <ExpressionBindings>
+            <Item1 Ref="140" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.Subtotal] + Iif(Len([Documento.Trm]) &gt; 0, ' ' + [Documento.Moneda], '')" />
+          </ExpressionBindings>
+          <StylePriority Ref="141" UseFont="false" UseTextAlignment="false" />
+        </Item3>
+        <Item4 Ref="142" ControlType="XRSubreport" Name="subImpuestos" SizeF="652.116,140" LocationFloat="1301.585,65.873" Dpi="254">
+          <ReportSource Ref="143" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v22.1, Version=22.1.15.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Margins="39, 39, 39, 39" PageWidth="850" PageHeight="1100" Version="22.1" DataMember="Impuestos">
+            <Bands>
+              <Item1 Ref="144" ControlType="DetailBand" Name="DetailImpuestos" HeightF="13.779528">
+                <HierarchyPrintOptions Ref="145" Indent="7.874016" />
+                <Controls>
+                  <Item1 Ref="146" ControlType="XRTable" Name="tblImpuestoRow" TextAlignment="MiddleLeft" SizeF="652.116,11.811024" LocationFloat="0,0">
+                    <Rows>
+                      <Item1 Ref="147" ControlType="XRTableRow" Name="rowImpuesto" Weight="1">
+                        <Cells>
+                          <Item1 Ref="148" ControlType="XRTableCell" Name="cellImpConcepto" Weight="1" TextAlignment="MiddleLeft" Font="DejaVu Sans, 8pt" ForeColor="Gray">
+                            <ExpressionBindings>
+                              <Item1 Ref="149" EventName="BeforePrint" PropertyName="Text" Expression="[Concepto]" />
+                            </ExpressionBindings>
+                            <StylePriority Ref="150" UseFont="false" UseForeColor="false" />
+                          </Item1>
+                          <Item2 Ref="151" ControlType="XRTableCell" Name="cellImpValor" Weight="1" TextAlignment="MiddleRight" Font="DejaVu Sans, 8pt, style=Bold">
+                            <ExpressionBindings>
+                              <Item1 Ref="152" EventName="BeforePrint" PropertyName="Text" Expression="Iif([Tipo] = 'Retencion' Or [Tipo] = 'Descuento', '-', Iif([Tipo] = 'Cargo', '+', '')) + [Valor]" />
+                              <Item2 Ref="153" EventName="BeforePrint" PropertyName="ForeColor" Expression="'Black'" />
+                            </ExpressionBindings>
+                            <StylePriority Ref="154" UseFont="false" UseForeColor="false" UseTextAlignment="false" />
+                          </Item2>
+                        </Cells>
+                      </Item1>
+                    </Rows>
+                    <StylePriority Ref="155" UseTextAlignment="false" />
+                  </Item1>
+                </Controls>
+              </Item1>
+            </Bands>
+          </ReportSource>
+        </Item4>
+        <Item5 Ref="156" ControlType="XRLine" Name="lineGrand" SizeF="660,6" LocationFloat="1291.003,242" Dpi="254" ForeColor="255,36,85,201">
+          <StylePriority Ref="157" UseForeColor="false" />
+        </Item5>
+        <Item6 Ref="158" ControlType="XRLabel" Name="lblTotalK" Text="TOTAL" SizeF="200.686,50" LocationFloat="1291.003,248" Dpi="254" Font="DejaVu Sans, 9pt, style=Bold">
+          <StylePriority Ref="159" UseFont="false" />
+        </Item6>
+        <Item7 Ref="160" ControlType="XRLabel" Name="lblTotalV" CanShrink="true" TextAlignment="MiddleRight" SizeF="460,50" LocationFloat="1489,248" Dpi="254" Font="DejaVu Sans Mono, 12pt, style=Bold" ForeColor="Black">
+          <ExpressionBindings>
+            <Item1 Ref="161" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.Total] + Iif(Len([Documento.Trm]) &gt; 0, ' ' + [Documento.Moneda], '')" />
+          </ExpressionBindings>
+          <StylePriority Ref="162" UseFont="false" UseForeColor="false" UseTextAlignment="false" />
+        </Item7>
+        <Item8 Ref="163" ControlType="XRLabel" Name="lblTotalLetras" Multiline="true" SizeF="949.901,95" LocationFloat="1007.937,360.579" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Italic" ForeColor="255,90,90,90">
+          <ExpressionBindings>
+            <Item1 Ref="164" EventName="BeforePrint" PropertyName="Text" Expression="'Son: ' + [Documento.TotalEnLetras]" />
+          </ExpressionBindings>
+          <StylePriority Ref="165" UseFont="false" UseForeColor="false" />
+        </Item8>
+        <Item9 Ref="1207" ControlType="XRPanel" Name="pnlQrCufe" SizeF="1959,679.695" LocationFloat="0,20" Dpi="254">
+          <Controls>
+            <Item1 Ref="170" ControlType="XRPictureBox" Name="picQr" Sizing="StretchImage" SizeF="300,300" LocationFloat="0,0" Dpi="254">
+              <ExpressionBindings>
+                <Item1 Ref="171" EventName="BeforePrint" PropertyName="ImageUrl" Expression="[Documento.QrImageUrl]" />
+                <Item2 Ref="172" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.QrImageUrl]) &gt; 0" />
+              </ExpressionBindings>
+            </Item1>
+            <Item2 Ref="173" ControlType="XRLabel" Name="lblCufe" Multiline="true" CanGrow="false" AnchorVertical="Bottom" SizeF="949.983,90" LocationFloat="0,345.582" Dpi="254" Font="DejaVu Sans Mono, 6pt" ForeColor="255,90,90,90">
+              <ExpressionBindings>
+                <Item1 Ref="174" EventName="BeforePrint" PropertyName="Text" Expression="'CUFE: ' + [Documento.Cufe]" />
+                <Item2 Ref="175" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.Cufe]) &gt; 0" />
+              </ExpressionBindings>
+              <StylePriority Ref="176" UseFont="false" UseForeColor="false" />
+            </Item2>
+            <Item3 Ref="166" ControlType="XRLabel" Name="lblObservaciones" Multiline="true" CanGrow="false" AnchorVertical="Bottom" SizeF="1959,100" LocationFloat="0,440.87" Dpi="254" Font="DejaVu Sans, 7.5pt" ForeColor="255,90,90,90">
+              <ExpressionBindings>
+                <Item1 Ref="167" EventName="BeforePrint" PropertyName="Text" Expression="'Observaciones: ' + [Documento.Notas]" />
+                <Item2 Ref="168" EventName="BeforePrint" PropertyName="Visible" Expression="1 = 0" />
+              </ExpressionBindings>
+              <StylePriority Ref="169" UseFont="false" UseForeColor="false" />
+            </Item3>
+            <Item4 Ref="131" ControlType="XRLabel" Name="label1" Multiline="true" CanGrow="false" AnchorVertical="Bottom" TextAlignment="MiddleCenter" SizeF="1959,122.975" LocationFloat="0,556.72" Dpi="254" Font="DejaVu Sans, 4.5pt" ForeColor="255,90,90,90">
+              <ExpressionBindings>
+                <Item1 Ref="132" EventName="BeforePrint" PropertyName="Text" Expression="[Documento.Leyenda]" />
+                <Item2 Ref="133" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.Leyenda]) &gt; 0" />
+              </ExpressionBindings>
+              <StylePriority Ref="134" UseFont="false" UseForeColor="false" UseTextAlignment="false" />
+            </Item4>
+          </Controls>
+        </Item9>
+      </Controls>
+    </Item7>
+    <Item8 Ref="177" ControlType="PageFooterBand" Name="PageFooter" HeightF="140" Dpi="254">
+      <Controls>
+        <Item1 Ref="178" ControlType="XRLabel" Name="lblLegal" Multiline="true" SizeF="1959,60" LocationFloat="0,0" Dpi="254" Font="DejaVu Sans, 7pt" ForeColor="255,90,90,90">
+          <ExpressionBindings>
+            <Item1 Ref="179" EventName="BeforePrint" PropertyName="Text" Expression="'Representación gráfica de la ' + [Documento.DocumentoTipo] + ', generada a partir del XML autorizado por la DIAN.' + '&#10;' + 'Este documento no requiere firma manuscrita — ley 527 de 1999.'" />
+          </ExpressionBindings>
+          <StylePriority Ref="180" UseFont="false" UseForeColor="false" />
+        </Item1>
+        <Item2 Ref="181" ControlType="XRLine" Name="lineSoftware" SizeF="1959,4" LocationFloat="0,65" Dpi="254" ForeColor="Gainsboro">
+          <StylePriority Ref="182" UseForeColor="false" />
+        </Item2>
+        <Item3 Ref="183" ControlType="XRLabel" Name="lblFabricante" Multiline="true" SizeF="900,60" LocationFloat="0,75" Dpi="254" Font="DejaVu Sans, 7pt" ForeColor="255,90,90,90">
+          <ExpressionBindings>
+            <Item1 Ref="184" EventName="BeforePrint" PropertyName="Text" Expression="'Fabricante del software: ' + [Documento.FabricanteSoftwareNombre] + ' · NIT ' + [Documento.FabricanteSoftwareNit] + '&#10;Nombre del software: ' + [Documento.NombreSoftware]" />
+          </ExpressionBindings>
+          <StylePriority Ref="185" UseFont="false" UseForeColor="false" />
+        </Item3>
+        <Item4 Ref="186" ControlType="XRLabel" Name="lblProveedor" Multiline="true" SizeF="700,60" LocationFloat="910,75" Dpi="254" Font="DejaVu Sans, 7pt" ForeColor="255,90,90,90">
+          <ExpressionBindings>
+            <Item1 Ref="187" EventName="BeforePrint" PropertyName="Text" Expression="'Proveedor Tecnológico: ' + [Documento.ProveedorTecnologicoNombre] + ' · NIT ' + [Documento.ProveedorTecnologicoNit]" />
+            <Item2 Ref="188" EventName="BeforePrint" PropertyName="Visible" Expression="Len([Documento.ProveedorTecnologicoNombre]) &gt; 0" />
+          </ExpressionBindings>
+          <StylePriority Ref="189" UseFont="false" UseForeColor="false" />
+        </Item4>
+        <Item5 Ref="190" ControlType="XRPageInfo" Name="lblPagina" TextFormatString="PÁGINA {0} / {1}" TextAlignment="TopRight" SizeF="300,40" LocationFloat="1659,75" Dpi="254" Font="DejaVu Sans, 7.5pt, style=Bold" ForeColor="255,90,90,90">
+          <StylePriority Ref="191" UseFont="false" UseForeColor="false" />
+        </Item5>
+      </Controls>
+    </Item8>
+    <Item9 Ref="192" ControlType="BottomMarginBand" Name="BottomMargin" Dpi="254" />
+  </Bands>
+</XtraReportsLayoutSerializer>
