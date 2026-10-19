@@ -55,6 +55,8 @@ public sealed class SkiaPdfExport : ExportBase
             var ox = Math.Min(a.Right, b.Right) - Math.Max(a.Left, b.Left); var oy = Math.Min(a.Bottom, b.Bottom) - Math.Max(a.Top, b.Top);
             if (ox > 3 && oy > 2.5f) Overlaps.Add($"p{_pageNo}: texto '{_texts[i].Name}' ({_texts[i].Text.Replace('\n', ' ')[..Math.Min(22, _texts[i].Text.Replace('\n', ' ').Length)]}) se monta con '{_texts[j].Name}' ({_texts[j].Text.Replace('\n', ' ')[..Math.Min(22, _texts[j].Text.Replace('\n', ' ').Length)]})");
         }
+        if (!string.IsNullOrWhiteSpace(Watermark))
+            DrawWatermark(Watermark!, _pageW, _unlimited ? Math.Max(50f, _maxBottom) : _pageH);
         using (var picture = _recorder!.EndRecording())
         {
             // Tirilla: la hoja mide lo que mida el contenido (+ margen inferior); el resto, su alto fijo.
@@ -66,6 +68,36 @@ public sealed class SkiaPdfExport : ExportBase
         _recorder.Dispose(); _recorder = null;
         _canvas = null;
         base.ExportPageEnd(page);
+    }
+
+    /// <summary>
+    /// Texto grande en diagonal (p. ej. "ANULADA") que se dibuja al final de cada página, encima del contenido. Lo pide quien genera
+    /// el PDF con el dato reservado "__Watermark": así vale para cualquier plantilla sin editarla.
+    /// </summary>
+    public string? Watermark { get; set; }
+
+    private void DrawWatermark(string text, float pageW, float pageH)
+    {
+        var cv = _canvas!;
+        var angle = -45f;
+        // El texto ocupa ~70 % de la diagonal de la página, sin pasar del ancho disponible en una hoja angosta (tirilla).
+        var diagonal = MathF.Sqrt(pageW * pageW + pageH * pageH);
+        var maxLength = Math.Min(diagonal * 0.7f, pageW * 0.9f / MathF.Cos(MathF.PI / 4));
+        using var tf = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold) ?? SKTypeface.Default;
+        using var probe = new SKFont(tf, 100f);
+        var size = 100f * maxLength / Math.Max(1f, probe.MeasureText(text));
+        using var font = new SKFont(tf, size) { Edging = SKFontEdging.SubpixelAntialias };
+        var width = font.MeasureText(text);
+
+        cv.Save();
+        cv.Translate(pageW / 2f, pageH / 2f);
+        cv.RotateDegrees(angle);
+        var baseline = -(font.Metrics.Ascent + font.Metrics.Descent) / 2f;
+        using (var fill = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Fill, Color = new SKColor(220, 38, 38, 85) })
+            cv.DrawText(text, -width / 2f, baseline, font, fill);
+        using (var edge = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = Math.Max(1.5f, size / 40f), Color = new SKColor(220, 38, 38, 150) })
+            cv.DrawText(text, -width / 2f, baseline, font, edge);
+        cv.Restore();
     }
 
     protected override void ExportBand(BandBase band)

@@ -13,6 +13,8 @@ namespace FacilReports.Services;
 /// </summary>
 public sealed class FastReportGenerator
 {
+    public const string WatermarkKey = "__Watermark";
+
     private readonly GoogleDriveService _templates;
     private readonly RepxToFastReportConverter _converter;
     private readonly GhostscriptPdfOptimizer _optimizer;
@@ -39,6 +41,14 @@ public sealed class FastReportGenerator
         var repx = await _templates.GetTemplateAsync(tenant, templateKey, fileId)
             ?? throw new FileNotFoundException($"Template '{templateKey}' not found");
 
+        // "__Watermark" no es un dato de la plantilla: es la orden de dibujar ese texto en diagonal sobre cada página (p. ej. "ANULADA").
+        string? watermark = null;
+        if (data.TryGetValue(WatermarkKey, out var watermarkValue))
+        {
+            watermark = watermarkValue?.ToString();
+            data = data.Where(x => x.Key != WatermarkKey).ToDictionary(x => x.Key, x => x.Value);
+        }
+
         _logger.LogInformation("Convirtiendo REPX {TemplateKey} en memoria para FastReport.", templateKey);
         Report report;
         try
@@ -52,7 +62,7 @@ public sealed class FastReportGenerator
         report.Prepare();
 
         using var output = new MemoryStream();
-        var exporter = new SkiaPdfExport();
+        var exporter = new SkiaPdfExport { Watermark = watermark };
         report.Export(exporter, output);
         foreach (var overlap in exporter.Overlaps.Distinct())
             _logger.LogWarning("Plantilla {TemplateKey}: {Overlap}", templateKey, overlap);
